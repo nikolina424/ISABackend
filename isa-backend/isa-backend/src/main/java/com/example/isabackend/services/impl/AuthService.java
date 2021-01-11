@@ -130,7 +130,8 @@ public class AuthService implements IAuthService {
         List<Authority> authorities = new ArrayList<>();
         authorities.add(_authorityRepository.findOneByName("ROLE_PATIENT"));
         user.setAuthorities(new HashSet<>(authorities));
-
+        patient.setDeleted(false);
+        patient.setRequestStatus(RequestStatus.PENDING);
         patient.setAddress(request.getAddress());
         patient.setFirstName(request.getFirstName());
         patient.setLastName(request.getLastName());

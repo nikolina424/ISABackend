@@ -1,11 +1,13 @@
 package com.example.isabackend.controller;
 
+import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.TempResponse;
 import com.example.isabackend.services.IPatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +54,25 @@ public class PatientController {
         else{
             return new ResponseEntity<>("Patient doesn't exist.", HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    //admin odobrava
+    @PutMapping("/approve")
+    //@PreAuthorize("hasAuthority('REGISTER')")
+    public void approveRegistrationRequest(@RequestBody GetIdRequest request){
+        _patientService.approveRegistrationRequest(request);
+    }
+
+    @PutMapping("/deny")
+    //@PreAuthorize("hasAuthority('REGISTER')")
+    public void denyRegistrationRequest(@RequestBody GetIdRequest request){
+        _patientService.denyRegistrationRequest(request);
+    }
+
+    //user potvrdjuje na mail-u
+    @PutMapping("/confirm")
+    public void confirmRegistrationRequest(@RequestBody GetIdRequest request){
+        _patientService.confirmRegistrationRequest(request);
     }
 }

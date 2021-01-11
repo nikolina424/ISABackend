@@ -1,5 +1,6 @@
 package com.example.isabackend.services;
 
+import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
 import com.example.isabackend.dto.response.PatientResponse;
 
@@ -13,4 +14,10 @@ public interface IPatientService {
     void updatePatient(Long id, UpdatePatientRequest request);
 
     boolean deletePatientById(Long id);
+
+    void approveRegistrationRequest(GetIdRequest request);
+
+    void denyRegistrationRequest(GetIdRequest request);
+
+    void confirmRegistrationRequest(GetIdRequest request);
 }

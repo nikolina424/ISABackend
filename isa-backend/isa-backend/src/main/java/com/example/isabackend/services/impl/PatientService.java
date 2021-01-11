@@ -1,12 +1,15 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.entity.Patient;
 import com.example.isabackend.entity.User;
 import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IUserRepository;
+import com.example.isabackend.services.IEmailService;
 import com.example.isabackend.services.IPatientService;
+import com.example.isabackend.util.enums.RequestStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +19,12 @@ import java.util.List;
 public class PatientService implements IPatientService {
     private final IPatientRepository _patientRepository;
     private final IUserRepository _userRepository;
+    private final IEmailService _emailService;
 
-    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository) {
+    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository, IEmailService emailService) {
         _patientRepository = patientRepository;
         _userRepository = userRepository;
+        _emailService = emailService;
     }
 
     @Override
@@ -72,6 +77,30 @@ public class PatientService implements IPatientService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void approveRegistrationRequest(GetIdRequest request) {
+        Patient patient = _patientRepository.findOneById(request.getId());
+        patient.setRequestStatus(RequestStatus.APPROVED);
+        Patient savedPatient = _patientRepository.save(patient);
+
+        _emailService.approveRegistrationMail(savedPatient);
+    }
+
+    @Override
+    public void denyRegistrationRequest(GetIdRequest request) {
+        Patient patient = _patientRepository.findOneById(request.getId());
+        patient.setRequestStatus(RequestStatus.DENIED);
+        Patient savedPatient = _patientRepository.save(patient);
+        _emailService.denyRegistrationMail(savedPatient);
+    }
+
+    @Override
+    public void confirmRegistrationRequest(GetIdRequest request) {
+        Patient patient = _patientRepository.findOneById(request.getId());
+        patient.setRequestStatus(RequestStatus.CONFIRMED);
+        _patientRepository.save(patient);
     }
 
 
