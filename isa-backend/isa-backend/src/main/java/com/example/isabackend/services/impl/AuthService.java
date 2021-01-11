@@ -13,6 +13,7 @@ import com.example.isabackend.repository.IUserRepository;
 import com.example.isabackend.security.TokenUtils;
 import com.example.isabackend.services.IAuthService;
 import com.example.isabackend.util.GeneralException;
+import com.example.isabackend.util.enums.RequestStatus;
 import com.example.isabackend.util.enums.UserRoles;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -72,6 +73,19 @@ public class AuthService implements IAuthService {
     public UserResponse login(LoginRequest request) {
         User user = _userRepository.findOneByUsername(request.getUsername());
 
+        if(user == null || !_passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
+        }
+        if(user.getPatient() != null && user.getPatient().getRequestStatus().equals(RequestStatus.PENDING)){
+            throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
+        }
+        if(user.getPatient() != null && user.getPatient().getRequestStatus().equals(RequestStatus.DENIED)){
+            throw new GeneralException("Your registration has been denied.", HttpStatus.BAD_REQUEST);
+        }
+        if(user.getPatient() != null && user.getPatient().getRequestStatus().equals(RequestStatus.APPROVED)){
+            throw new GeneralException("Your registration has been approved by admin. Please activate your account.", HttpStatus.BAD_REQUEST);
+        }
+
         String username = request.getUsername();
         String password = request.getPassword();
         Authentication authentication = null;
@@ -80,6 +94,8 @@ public class AuthService implements IAuthService {
                     .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         }catch (BadCredentialsException e){
             throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
+        }catch (DisabledException e){
+            throw new GeneralException("Your registration request hasn't been approved yet.", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,6 +135,8 @@ public class AuthService implements IAuthService {
         patient.setFirstName(request.getFirstName());
         patient.setLastName(request.getLastName());
         patient.setNumber(request.getNumber());
+        patient.setCity(request.getCity());
+        patient.setCountry(request.getCountry());
 
         Patient savedPatient = _patientRepository.save(patient);
         savedPatient.setUser(user);

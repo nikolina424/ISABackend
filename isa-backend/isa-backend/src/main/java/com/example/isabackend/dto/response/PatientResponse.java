@@ -1,4 +1,4 @@
-package com.example.isabackend.dto.request;
+package com.example.isabackend.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationRequest {
+public class PatientResponse {
 
+    private Long id;
     private String username;
-    private String password;
-    private String rePassword;
     private String firstName;
     private String lastName;
     private String number;
     private String address;
     private String city;
     private String country;
-
+    private String userRole;
 }

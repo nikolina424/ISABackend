@@ -1,5 +1,6 @@
 package com.example.isabackend.entity;
 
+import com.example.isabackend.util.enums.RequestStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,17 @@ public class Patient {
     private String number;
 
     private String address;
+
+    private String city;
+
+    private String country;
+
+    @Enumerated(EnumType.STRING)
+    private RequestStatus requestStatus;
+
+    private boolean deleted;
+
+
 
 
 }

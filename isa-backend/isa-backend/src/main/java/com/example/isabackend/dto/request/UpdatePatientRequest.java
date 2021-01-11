@@ -7,16 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationRequest {
+public class UpdatePatientRequest {
 
-    private String username;
-    private String password;
-    private String rePassword;
     private String firstName;
     private String lastName;
-    private String number;
     private String address;
     private String city;
     private String country;
+    private String number;
 
 }

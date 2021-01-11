@@ -41,6 +41,6 @@ insert into pharmacist (id, first_name, last_name, user_id, number, address) val
 insert into dermatologist (id, first_name, last_name, user_id, number, address) values
 (1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128');
 
-insert into patient (id, first_name, last_name, user_id, number, address) values
-(1, 'Zorana', 'Vlaskalic', 3, '43242324', 'Majevicka 8'),
-(2, 'Dajana', 'Erceg', 4, '3432423543', 'Svetislava Kasapinovica 4');
+insert into patient (id, first_name, last_name, user_id, number, address, city, country, request_status, deleted) values
+(1, 'Zorana', 'Vlaskalic', 3, '43242324', 'Majevicka 8','Novi Sad','Srbija', 'CONFIRMED',false),
+(2, 'Dajana', 'Erceg', 4, '3432423543', 'Svetislava Kasapinovica 4','Novi Sad','Srbija','CONFIRMED', false);
