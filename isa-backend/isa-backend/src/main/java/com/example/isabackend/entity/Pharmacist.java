@@ -27,4 +27,8 @@ public class Pharmacist {
     private String number;
 
     private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pharmacy_id")
+    private Pharmacy pharmacy;
 }

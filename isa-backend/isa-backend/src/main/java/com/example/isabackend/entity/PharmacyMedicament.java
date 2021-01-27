@@ -4,31 +4,27 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-@Entity
-public class Dermatologist {
+public class PharmacyMedicament {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String number;
-
-    private String address;
+    @Column(name = "quantity")
+    private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medicament_id")
+    private Medicament medicament;
 }

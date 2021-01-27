@@ -1,7 +1,9 @@
 package com.example.isabackend.services;
 
+import com.example.isabackend.controller.AllergyRequest;
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
+import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
 
 import java.util.List;
@@ -22,4 +24,8 @@ public interface IPatientService {
     void confirmRegistrationRequest(GetIdRequest request);
 
     List<PatientResponse> getRegistrationRequests();
+
+    void addNewAlergy(Long id, AllergyRequest request);
+
+    List<MedicamentResponse> getAvailableMeds(Long id);
 }

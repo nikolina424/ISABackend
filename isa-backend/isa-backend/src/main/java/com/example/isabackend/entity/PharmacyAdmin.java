@@ -24,4 +24,8 @@ public class PharmacyAdmin {
     private String firstName;
 
     private String lastName;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pharmacy_id", referencedColumnName = "id")
+    private Pharmacy pharmacy;
 }

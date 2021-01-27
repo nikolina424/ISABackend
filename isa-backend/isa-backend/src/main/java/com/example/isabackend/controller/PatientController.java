@@ -2,6 +2,7 @@ package com.example.isabackend.controller;
 
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
+import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.TempResponse;
 import com.example.isabackend.services.IPatientService;
@@ -38,9 +39,26 @@ public class PatientController {
         }
     }
 
+    @GetMapping("/{id}/available-meds")
+    public ResponseEntity<?> getAvailableMeds(@PathVariable("id") Long id){
+        List<MedicamentResponse> medicamentResponses = _patientService.getAvailableMeds(id);
+        if(medicamentResponses != null) {
+            return new ResponseEntity<>(medicamentResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Available medicaments doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping("/{id}")
     public void updatePatient(@PathVariable("id")Long id, @RequestBody UpdatePatientRequest request){
         _patientService.updatePatient(id, request);
+
+    }
+
+    @PutMapping("/{id}/alergies")
+    public void addNewAlergy(@PathVariable("id")Long id, @RequestBody AllergyRequest request){
+        _patientService.addNewAlergy(id, request);
 
     }
 

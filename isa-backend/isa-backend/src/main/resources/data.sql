@@ -29,18 +29,34 @@ insert into user_authority (user_id, authority_id) values
 (5, 1),
 (6, 2);
 
+insert into medicament(id, name, type, contraindications,ingredients ) values
+(1, 'Eritromicin', 'Antibiotik', 'Otezano disanje, nesvestica, svrab i osip po kozi', 'Magnezijum-stearat, kukuruzni skrob'),
+(2, 'Gentamicin', 'Antibiotik', 'Poremecaj ravnoteze, oslabljen sluh', 'Natrijum-metabisulfit'),
+(3, 'Hloramfenikol', 'Antibiotik', 'Peckanje, bockanje, svrab, zamucen vid, modrice', '250gr hloramfenikola, beli parafin'),
+(4, 'Aspirin', 'Antipiretik', 'Vrtoglavica, zujanje u usima, mucnina', ' 100 mg acetilsalicilne kiseline'),
+(5, 'Paracetamol', 'Antipiretik', 'Poremecaji imunoloskog sistema', 'Mikrokristalna celuloza, kroskarmeloza-natrijum, magnezijum-stearat');
+
+insert into pharmacy (id, name) values
+(1, 'Apoteka Jankovic');
+
 insert into system_admin (id, first_name, last_name, user_id) values
 (1, 'Nikolina', 'Ivankovic', 5);
 
-insert into pharmacy_admin (id, first_name, last_name, user_id) values
-(1, 'Marina', 'Ivankovic', 6);
+insert into pharmacy_admin (id, first_name, last_name, user_id, pharmacy_id) values
+(1, 'Marina', 'Ivankovic', 6, 1);
 
-insert into pharmacist (id, first_name, last_name, user_id, number, address) values
-(1, 'Dusan', 'Sisarica', 1, '123456789', 'Marka Kraljevica 28');
+insert into pharmacist (id, first_name, last_name, user_id, number, address, pharmacy_id) values
+(1, 'Dusan', 'Sisarica', 1, '123456789', 'Marka Kraljevica 28', 1);
 
-insert into dermatologist (id, first_name, last_name, user_id, number, address) values
-(1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128');
+insert into dermatologist (id, first_name, last_name, user_id, number, address, pharmacy_id) values
+(1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128', 1);
 
 insert into patient (id, first_name, last_name, user_id, number, address, city, country, request_status, deleted) values
 (1, 'Zorana', 'Vlaskalic', 3, '43242324', 'Majevicka 8','Novi Sad','Srbija', 'CONFIRMED',false),
 (2, 'Dajana', 'Erceg', 4, '3432423543', 'Svetislava Kasapinovica 4','Novi Sad','Srbija','CONFIRMED', false);
+
+insert into patients_medicaments (patient_id, medicament_id) values
+(1, 1), (1, 2), (2, 4);
+
+insert into pharmacy_medicament(id, quantity, pharmacy_id, medicament_id) values
+(1, 100, 1, 1), (2, 150, 1, 2), (3, 160, 1, 3), (4, 200, 1, 4), (5, 140, 1, 5);

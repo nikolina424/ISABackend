@@ -1,17 +1,20 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.controller.AllergyRequest;
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
+import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
+import com.example.isabackend.entity.Medicament;
 import com.example.isabackend.entity.Patient;
 import com.example.isabackend.entity.User;
+import com.example.isabackend.repository.IMedicamentRepository;
 import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IUserRepository;
 import com.example.isabackend.services.IEmailService;
 import com.example.isabackend.services.IPatientService;
 import com.example.isabackend.util.enums.RequestStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +24,15 @@ public class PatientService implements IPatientService {
     private final IPatientRepository _patientRepository;
     private final IUserRepository _userRepository;
     private final IEmailService _emailService;
+    private final IMedicamentRepository _medicamentRepository;
+    private final MedicamentService _medicamentService;
 
-    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository, IEmailService emailService) {
+    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository, IEmailService emailService, IMedicamentRepository medicamentRepository, MedicamentService medicamentService) {
         _patientRepository = patientRepository;
         _userRepository = userRepository;
         _emailService = emailService;
+        _medicamentRepository = medicamentRepository;
+        _medicamentService = medicamentService;
     }
 
     @Override
@@ -113,6 +120,30 @@ public class PatientService implements IPatientService {
             patientResponses.add(patientResponse);
         }
         return patientResponses;
+    }
+
+    @Override
+    public void addNewAlergy(Long id, AllergyRequest request) {
+        Patient patient = _patientRepository.findOneById(id);
+        Medicament medicament = _medicamentRepository.findOneById(request.getId());
+        List<Medicament> medicamentSet = patient.getMedicaments();
+        medicamentSet.add(medicament);
+        _patientRepository.save(patient);
+    }
+
+    @Override
+    public List<MedicamentResponse> getAvailableMeds(Long id) {
+        Patient patient = _patientRepository.findOneById(id);
+        List<Medicament> allergies = patient.getMedicaments();
+        List<Medicament> allMedicaments = _medicamentRepository.findAll();
+        List<Medicament> availableMedicaments = new ArrayList<>();
+        for (Medicament m: allMedicaments) {
+                if(!allergies.contains(m)){
+                    availableMedicaments.add(m);
+                }
+        }
+        List<MedicamentResponse> m = _medicamentService.mapMedicamentListToMedicamentResponseList(availableMedicaments);
+        return m;
     }
 
 

@@ -4,6 +4,9 @@ import com.example.isabackend.util.enums.RequestStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,6 +42,13 @@ public class Patient {
     private boolean deleted;
 
 
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "patients_medicaments",
+            joinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "medicament_id", referencedColumnName = "id"))
+    private List<Medicament> medicaments;
 
 
 }
