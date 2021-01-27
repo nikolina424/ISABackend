@@ -2,6 +2,7 @@ package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.LoginRequest;
 import com.example.isabackend.dto.request.RegistrationRequest;
+import com.example.isabackend.dto.response.LoginResponse;
 import com.example.isabackend.dto.response.UserResponse;
 import com.example.isabackend.entity.Authority;
 import com.example.isabackend.entity.MyUserDetails;
@@ -16,13 +17,7 @@ import com.example.isabackend.util.GeneralException;
 import com.example.isabackend.util.enums.RequestStatus;
 import com.example.isabackend.util.enums.UserRoles;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +34,6 @@ public class AuthService implements IAuthService {
 
     private final PasswordEncoder _passwordEncoder;
 
-    private final AuthenticationManager _authenticationManager;
-
     private final IAuthorityRepository _authorityRepository;
 
     private final IPatientRepository _patientRepository;
@@ -49,11 +42,10 @@ public class AuthService implements IAuthService {
 
 
 
-    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, IAuthorityRepository authorityRepository, IPatientRepository patientRepository) {
+    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository) {
         _tokenUtils = tokenUtils;
         _userRepository = userRepository;
         _passwordEncoder = passwordEncoder;
-        _authenticationManager = authenticationManager;
         _authorityRepository = authorityRepository;
         _patientRepository = patientRepository;
     }
@@ -85,33 +77,11 @@ public class AuthService implements IAuthService {
         if(user.getPatient() != null && user.getPatient().getRequestStatus().equals(RequestStatus.APPROVED)){
             throw new GeneralException("Your registration has been approved by admin. Please activate your account.", HttpStatus.BAD_REQUEST);
         }
-
-        String username = request.getUsername();
-        String password = request.getPassword();
-        Authentication authentication = null;
-        try {
-            authentication = _authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        }catch (BadCredentialsException e){
-            throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
-        }catch (DisabledException e){
-            throw new GeneralException("Your registration request hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
-            e.printStackTrace();
+        if(user.getPatient() != null && user.getPatient().isDeleted()) {
+            throw new GeneralException("Your account is blocked by admin.", HttpStatus.BAD_REQUEST);
         }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = "";
-        int expiresIn = 0;
-        if(!user.isHasSignedIn()){
-            MyUserDetails userLog = (MyUserDetails) authentication.getPrincipal();
-            jwt = _tokenUtils.generateToken(userLog.getUsername());
-            expiresIn = _tokenUtils.getExpiredIn();
-        }
         UserResponse userResponse = mapUserToUserResponse(user);
-        userResponse.setToken(jwt);
-        userResponse.setTokenExpiresIn(expiresIn);
-
         return userResponse;
     }
 

@@ -20,4 +20,6 @@ public interface IPatientService {
     void denyRegistrationRequest(GetIdRequest request);
 
     void confirmRegistrationRequest(GetIdRequest request);
+
+    List<PatientResponse> getRegistrationRequests();
 }

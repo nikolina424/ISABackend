@@ -56,6 +56,13 @@ public class PatientController {
         }
     }
 
+    @GetMapping("/registration-requests")
+    //@PreAuthorize("hasAuthority('REGISTER')")
+    public List<PatientResponse> getRegistrationRequests(){
+        return _patientService.getRegistrationRequests();
+    }
+
+
 
     //admin odobrava
     @PutMapping("/approve")

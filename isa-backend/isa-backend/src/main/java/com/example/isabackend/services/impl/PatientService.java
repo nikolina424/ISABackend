@@ -11,6 +11,7 @@ import com.example.isabackend.services.IEmailService;
 import com.example.isabackend.services.IPatientService;
 import com.example.isabackend.util.enums.RequestStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,17 @@ public class PatientService implements IPatientService {
         Patient patient = _patientRepository.findOneById(request.getId());
         patient.setRequestStatus(RequestStatus.CONFIRMED);
         _patientRepository.save(patient);
+    }
+
+    @Override
+    public List<PatientResponse> getRegistrationRequests() {
+        List<Patient> patients = _patientRepository.findAllByRequestStatus(RequestStatus.PENDING);
+        List<PatientResponse> patientResponses = new ArrayList<>();
+        for (Patient patient: patients) {
+            PatientResponse patientResponse = mapPatientToPatientResponse(patient);
+            patientResponses.add(patientResponse);
+        }
+        return patientResponses;
     }
 
 
