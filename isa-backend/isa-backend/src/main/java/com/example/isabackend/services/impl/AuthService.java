@@ -2,12 +2,9 @@ package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.LoginRequest;
 import com.example.isabackend.dto.request.RegistrationRequest;
-import com.example.isabackend.dto.response.LoginResponse;
+import com.example.isabackend.dto.response.PharmacyAdminResponse;
 import com.example.isabackend.dto.response.UserResponse;
-import com.example.isabackend.entity.Authority;
-import com.example.isabackend.entity.MyUserDetails;
-import com.example.isabackend.entity.Patient;
-import com.example.isabackend.entity.User;
+import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IAuthorityRepository;
 import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IUserRepository;
@@ -38,16 +35,17 @@ public class AuthService implements IAuthService {
 
     private final IPatientRepository _patientRepository;
 
+    private final PharmacyAdminService _pharmacyAdminService;
 
 
 
-
-    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository) {
+    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService) {
         _tokenUtils = tokenUtils;
         _userRepository = userRepository;
         _passwordEncoder = passwordEncoder;
         _authorityRepository = authorityRepository;
         _patientRepository = patientRepository;
+        _pharmacyAdminService = pharmacyAdminService;
     }
 
     @Override
@@ -138,12 +136,15 @@ public class AuthService implements IAuthService {
             userResponse.setUserRole("PATIENT");
         }else if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_PHARMACIST"))){
             userResponse.setUserRole("PHARMACIST");
+            //userResponse.setPharmacyId();
         }else if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_DERMATOLOGIST"))){
             userResponse.setUserRole("DERMATOLOGIST");
         }else if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_SYSTEM_ADMIN"))){
             userResponse.setUserRole("SYSTEM_ADMIN");
         }else if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_PHARMACY_ADMIN"))){
             userResponse.setUserRole("PHARMACY_ADMIN");
+            PharmacyAdminResponse pharmacyAdminResponse = _pharmacyAdminService.getPharmacyAdminByUserId(user.getId());
+            userResponse.setPharmacyId(pharmacyAdminResponse.getPharmacyId());
         }
         return userResponse;
     }

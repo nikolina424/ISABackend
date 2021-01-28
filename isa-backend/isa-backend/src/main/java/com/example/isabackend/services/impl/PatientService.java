@@ -1,6 +1,6 @@
 package com.example.isabackend.services.impl;
 
-import com.example.isabackend.controller.AllergyRequest;
+import com.example.isabackend.dto.request.AllergyRequest;
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.UpdatePatientRequest;
 import com.example.isabackend.dto.response.MedicamentResponse;

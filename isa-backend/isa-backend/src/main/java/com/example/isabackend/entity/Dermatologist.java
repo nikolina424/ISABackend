@@ -3,6 +3,7 @@ package com.example.isabackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +29,10 @@ public class Dermatologist {
 
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pharmacy_id")
-    private Pharmacy pharmacy;
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "pharmacy_id")
+    //private Pharmacy pharmacy;
+
+    @OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Shift> dermatologistShifts;
 }

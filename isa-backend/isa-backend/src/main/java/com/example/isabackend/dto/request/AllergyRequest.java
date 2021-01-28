@@ -1,4 +1,5 @@
-package com.example.isabackend.controller;
+package com.example.isabackend.dto.request;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

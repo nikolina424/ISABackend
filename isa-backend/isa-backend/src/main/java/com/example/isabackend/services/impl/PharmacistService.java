@@ -1,0 +1,79 @@
+package com.example.isabackend.services.impl;
+
+import com.example.isabackend.dto.response.*;
+import com.example.isabackend.entity.Dermatologist;
+import com.example.isabackend.entity.Pharmacist;
+import com.example.isabackend.entity.Pharmacy;
+import com.example.isabackend.repository.IPharmacistRepository;
+import com.example.isabackend.services.IPharmacistService;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class PharmacistService implements IPharmacistService {
+
+    private final IPharmacistRepository _pharmacistRepository;
+
+    public PharmacistService(IPharmacistRepository pharmacistRepository) {
+        _pharmacistRepository = pharmacistRepository;
+    }
+
+    @Override
+    public SearchPharmacistResponse searchPharmacist(String firstName, String lastName) {
+        List<Pharmacist> filteredPharmacist = filteredPharmacist(firstName, lastName);
+        List<PharmacistResponse> pharmacistResponses =  mapPharmacistsToPharmacistResponses(filteredPharmacist);
+        return mapToSearchResponse(pharmacistResponses);
+    }
+
+    private SearchPharmacistResponse mapToSearchResponse(List<PharmacistResponse> pharmacistResponses) {
+        SearchPharmacistResponse searchResponse = new SearchPharmacistResponse();
+        searchResponse.setPharmacistResponses(pharmacistResponses);
+        return searchResponse;
+    }
+
+    private List<PharmacistResponse> mapPharmacistsToPharmacistResponses(List<Pharmacist> pharmacists) {
+        List<PharmacistResponse> pharmacistResponses = new ArrayList<>();
+        for(Pharmacist pharmacist: pharmacists){
+            PharmacistResponse response = mapPharmacistToPharmacistResponse(pharmacist);
+            pharmacistResponses.add(response);
+        }
+        return pharmacistResponses;
+    }
+
+    private PharmacistResponse mapPharmacistToPharmacistResponse(Pharmacist pharmacist) {
+        PharmacistResponse pharmacistResponse = new PharmacistResponse();
+        pharmacistResponse.setId(pharmacist.getId());
+        pharmacistResponse.setAddress(pharmacist.getAddress());
+        pharmacistResponse.setFirstName(pharmacist.getFirstName());
+        pharmacistResponse.setLastName(pharmacist.getLastName());
+        pharmacistResponse.setUsername(pharmacist.getUser().getUsername());
+        pharmacistResponse.setNumber(pharmacist.getNumber());
+
+        return pharmacistResponse;
+    }
+
+    private List<Pharmacist> filteredPharmacist(String firstName, String lastName) {
+        List<Pharmacist> allPharmacists = _pharmacistRepository.findAll();
+        return allPharmacists
+                .stream()
+                .filter(pharmacist -> {
+                    if(firstName != "") {
+                        return pharmacist.getFirstName().equals(firstName);
+                    } else {
+                        return true;
+                    }
+                })
+                .filter(pharmacist -> {
+                    if(lastName != "") {
+                        return pharmacist.getLastName().equals(lastName);
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+}

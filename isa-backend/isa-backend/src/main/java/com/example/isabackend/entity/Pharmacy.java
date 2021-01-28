@@ -21,16 +21,25 @@ public class Pharmacy {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private PharmacyAdmin pharmacyAdmin;
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "about")
+    private String about;
+
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PharmacyAdmin> pharmacyAdmins;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Pharmacist> pharmacists;
 
-    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Dermatologist> dermatologists;
+    //@OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //private List<Dermatologist> dermatologists;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PharmacyMedicament> pharmacistMedicaments;
+
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Shift> dermatologistShifts;
 
 }
