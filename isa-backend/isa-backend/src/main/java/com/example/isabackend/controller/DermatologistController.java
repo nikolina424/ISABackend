@@ -52,4 +52,6 @@ public class DermatologistController {
         return new ResponseEntity<>(_dermatologistService.searchDermatologists(firstName, lastName), HttpStatus.OK);
     }
 
+
+
 }

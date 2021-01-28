@@ -2,6 +2,7 @@ package com.example.isabackend.services;
 
 
 import com.example.isabackend.dto.request.LoginRequest;
+import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.RegistrationRequest;
 import com.example.isabackend.dto.response.UserResponse;
 
@@ -14,4 +15,5 @@ public interface IAuthService {
     UserResponse registerPatient(RegistrationRequest request);
 
 
+    boolean registerPharmacist(PharmacistRequest request);
 }

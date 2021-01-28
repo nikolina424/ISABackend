@@ -42,4 +42,7 @@ public class Pharmacy {
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shift> dermatologistShifts;
 
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShiftPharmacist> pharmacistsShifts;
+
 }

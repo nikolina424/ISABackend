@@ -1,5 +1,6 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.UpdatePharmacyAdminRequest;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.PharmacyAdminResponse;
 import com.example.isabackend.entity.Patient;
@@ -35,6 +36,17 @@ public class PharmacyAdminService implements IPharmacyAdminService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void updatePharmacyAdmin(Long id, UpdatePharmacyAdminRequest request) {
+        PharmacyAdmin pharmacyAdmin = _pharmacyAdminRepository.findOneById(id);
+        if(request.getFirstName() != null)
+            pharmacyAdmin.setFirstName(request.getFirstName());
+        if(request.getLastName() != null)
+            pharmacyAdmin.setLastName(request.getLastName());
+
+        _pharmacyAdminRepository.save(pharmacyAdmin);
     }
 
     private PharmacyAdminResponse mapPharmacyAdminToPharmacyAdminResponse(PharmacyAdmin pharmacyAdmin) {

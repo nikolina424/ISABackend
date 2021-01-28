@@ -65,3 +65,6 @@ insert into pharmacy_medicament(id, quantity, pharmacy_id, medicament_id) values
 
 insert into shift(id, start_shift, end_shift, pharmacy_id, dermatologist_id) values
 (1, '08:00', '12:00', 1, 1);
+
+insert into shift_pharmacist(id, start_shift, end_shift, pharmacy_id, pharmacist_id) values
+(1, '08:00', '12:00', 1, 1);

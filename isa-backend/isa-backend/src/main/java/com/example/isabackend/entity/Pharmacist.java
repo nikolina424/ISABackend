@@ -3,6 +3,7 @@ package com.example.isabackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Getter
@@ -31,4 +32,7 @@ public class Pharmacist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
+
+    @OneToMany(mappedBy = "pharmacist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShiftPharmacist> pharmacistShifts;
 }

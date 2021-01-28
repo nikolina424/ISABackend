@@ -1,13 +1,12 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.LoginRequest;
+import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.RegistrationRequest;
 import com.example.isabackend.dto.response.PharmacyAdminResponse;
 import com.example.isabackend.dto.response.UserResponse;
 import com.example.isabackend.entity.*;
-import com.example.isabackend.repository.IAuthorityRepository;
-import com.example.isabackend.repository.IPatientRepository;
-import com.example.isabackend.repository.IUserRepository;
+import com.example.isabackend.repository.*;
 import com.example.isabackend.security.TokenUtils;
 import com.example.isabackend.services.IAuthService;
 import com.example.isabackend.util.GeneralException;
@@ -18,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,15 +37,24 @@ public class AuthService implements IAuthService {
 
     private final PharmacyAdminService _pharmacyAdminService;
 
+    private final IPharmacistRepository _pharmacistRepository;
+
+    private final IPharmacyRepository _pharmacyRepository;
+
+    private final IShiftPharmacistRepository _shiftPharmacyRepository;
 
 
-    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService) {
+
+    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository) {
         _tokenUtils = tokenUtils;
         _userRepository = userRepository;
         _passwordEncoder = passwordEncoder;
         _authorityRepository = authorityRepository;
         _patientRepository = patientRepository;
         _pharmacyAdminService = pharmacyAdminService;
+        _pharmacistRepository = pharmacistRepository;
+        _pharmacyRepository = pharmacyRepository;
+        _shiftPharmacyRepository = shiftPharmacyRepository;
     }
 
     @Override
@@ -116,6 +125,50 @@ public class AuthService implements IAuthService {
 
     }
 
+    @Override
+    public boolean registerPharmacist(PharmacistRequest request) {
+        if(!request.getPassword().equals(request.getRePassword())){
+            throw new GeneralException("Passwords do not match.", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        Pharmacist pharmacist = new Pharmacist();
+        ShiftPharmacist shiftPharmacist = new ShiftPharmacist();
+
+        if(request.getUsername().equals(_userRepository.findOneByUsername(request.getUsername()))){
+            return false;
+        }
+        user.setUsername(request.getUsername());
+        user.setPassword(_passwordEncoder.encode(request.getPassword()));
+        user.setUserRole(UserRoles.PHARMACIST);
+        user.setHasSignedIn(false);
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(_authorityRepository.findOneByName("ROLE_PHARMACIST"));
+        user.setAuthorities(new HashSet<>(authorities));
+
+        pharmacist.setFirstName(request.getFirstName());
+        pharmacist.setLastName(request.getLastName());
+        pharmacist.setNumber(request.getNumber());
+        pharmacist.setAddress(request.getAddress());
+
+
+
+        Pharmacist savedPharmacist = _pharmacistRepository.save(pharmacist);
+        savedPharmacist.setUser(user);
+        user.setPharmacist(savedPharmacist);
+        _userRepository.save(user);
+
+        LocalTime startShift = LocalTime.parse(request.getStartShift());
+        LocalTime endShift = LocalTime.parse(request.getEndShift());
+        shiftPharmacist.setStartShift(startShift.plusHours(1));
+        shiftPharmacist.setEndShift(endShift.plusHours(1));
+        shiftPharmacist.setPharmacist(savedPharmacist);
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        shiftPharmacist.setPharmacy(pharmacy);
+        _shiftPharmacyRepository.save(shiftPharmacist);
+
+
+        return true;
+    }
 
 
     private UserResponse mapUserToUserResponse(User user) {

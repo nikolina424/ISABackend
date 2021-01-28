@@ -1,10 +1,9 @@
 package com.example.isabackend.repository;
 
-import com.example.isabackend.entity.Pharmacist;
+import com.example.isabackend.entity.ShiftPharmacist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IPharmacistRepository extends JpaRepository<Pharmacist, Long> {
-    Pharmacist findOneById(Long id);
+public interface IShiftPharmacistRepository extends JpaRepository<ShiftPharmacist, Long> {
 }

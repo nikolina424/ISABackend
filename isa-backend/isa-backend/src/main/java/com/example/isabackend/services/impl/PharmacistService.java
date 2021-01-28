@@ -1,14 +1,18 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.response.*;
-import com.example.isabackend.entity.Dermatologist;
-import com.example.isabackend.entity.Pharmacist;
-import com.example.isabackend.entity.Pharmacy;
+import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IPharmacistRepository;
 import com.example.isabackend.services.IPharmacistService;
+import com.example.isabackend.util.GeneralException;
+import com.example.isabackend.util.enums.RequestStatus;
+import com.example.isabackend.util.enums.UserRoles;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,19 @@ public class PharmacistService implements IPharmacistService {
         List<PharmacistResponse> pharmacistResponses =  mapPharmacistsToPharmacistResponses(filteredPharmacist);
         return mapToSearchResponse(pharmacistResponses);
     }
+
+    @Override
+    public List<PharmacistResponse> getAllPharmacistByPharmacyId(Long id) {
+        List<Pharmacist> allPharmacists = _pharmacistRepository.findAll();
+        List<PharmacistResponse> pharmacyPharmacist = new ArrayList<>();
+        for (Pharmacist pharmacist: allPharmacists) {
+            if(pharmacist.getId().equals(id)){
+                pharmacyPharmacist.add(mapPharmacistToPharmacistResponse(pharmacist));
+            }
+        }
+        return pharmacyPharmacist;
+    }
+
 
     private SearchPharmacistResponse mapToSearchResponse(List<PharmacistResponse> pharmacistResponses) {
         SearchPharmacistResponse searchResponse = new SearchPharmacistResponse();
