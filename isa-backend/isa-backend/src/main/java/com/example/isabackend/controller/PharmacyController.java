@@ -28,6 +28,11 @@ public class PharmacyController {
         _pharmacyService.updatePharmacy(id, request);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPharmacies(@RequestParam("name") String name){
+        return new ResponseEntity<>(_pharmacyService.searchPharmacies(name), HttpStatus.OK);
+    }
+
     @GetMapping()
     public List<PharmacyResponse> getAllPharmacies(){
         return _pharmacyService.getAllPharmacies();

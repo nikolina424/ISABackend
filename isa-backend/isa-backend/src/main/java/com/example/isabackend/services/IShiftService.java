@@ -11,4 +11,6 @@ public interface IShiftService {
     List<ShiftResponse> getAllShifts();
 
     ShiftResponse createShift(ShiftRequest shiftRequest);
+
+    List<ShiftResponse> getAllShiftsByPharmacyId(Long id);
 }

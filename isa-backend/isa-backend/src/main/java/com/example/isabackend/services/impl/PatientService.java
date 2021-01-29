@@ -153,6 +153,7 @@ public class PatientService implements IPatientService {
         patientResponse.setAddress(patient.getAddress());
         patientResponse.setFirstName(patient.getFirstName());
         patientResponse.setLastName(patient.getLastName());
+        patientResponse.setCountry(patient.getCountry());
         patientResponse.setCity(patient.getCity());
         patientResponse.setUsername(patient.getUser().getUsername());
         patientResponse.setNumber(patient.getNumber());

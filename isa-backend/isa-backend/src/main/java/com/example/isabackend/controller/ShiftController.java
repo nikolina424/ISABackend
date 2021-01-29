@@ -33,6 +33,17 @@ public class ShiftController {
         }
     }
 
+    @GetMapping("/{id}/pharmacy")
+    public ResponseEntity<?> getAllShiftsByPharmacyId(@PathVariable("id") Long id){
+        List<ShiftResponse> shiftResponses = _shiftService.getAllShiftsByPharmacyId(id);
+        if(shiftResponses != null) {
+            return new ResponseEntity<>(shiftResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Shift for this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping()
     public List<ShiftResponse> getAllShifts(){
         return _shiftService.getAllShifts();

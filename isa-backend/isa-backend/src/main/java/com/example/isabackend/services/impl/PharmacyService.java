@@ -2,8 +2,7 @@ package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.PharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyRequest;
-import com.example.isabackend.dto.response.PatientResponse;
-import com.example.isabackend.dto.response.PharmacyResponse;
+import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IPharmacyService;
@@ -16,6 +15,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PharmacyService implements IPharmacyService {
@@ -66,6 +66,41 @@ public class PharmacyService implements IPharmacyService {
         pharmacy.setAddress(request.getAddress());
         _pharmacyRepository.save(pharmacy);
         return true;
+    }
+
+    @Override
+    public SearchPharmacyResponse searchPharmacies(String name) {
+        List<Pharmacy> filteredPharmacies = filteredPharmacies(name);
+        List<PharmacyResponse> pharmacyResponses =  mapPharmacyListToPharmacyResponseList(filteredPharmacies);
+        return mapToSearchResponse(pharmacyResponses);
+    }
+
+    private SearchPharmacyResponse mapToSearchResponse(List<PharmacyResponse> pharmacyResponses) {
+        SearchPharmacyResponse searchResponse = new SearchPharmacyResponse();
+        searchResponse.setPharmacyResponses(pharmacyResponses);
+        return searchResponse;
+    }
+
+    private List<PharmacyResponse> mapPharmacyListToPharmacyResponseList(List<Pharmacy> pharmacies) {
+        List<PharmacyResponse> pharmacyResponses = new ArrayList<>();
+        for (Pharmacy p:pharmacies) {
+            pharmacyResponses.add(mapPharmacyToPharmacyResponse(p));
+        }
+        return  pharmacyResponses;
+    }
+
+    private List<Pharmacy> filteredPharmacies(String name) {
+        List<Pharmacy> allPharmacies = _pharmacyRepository.findAll();
+        return allPharmacies
+                .stream()
+                .filter(pharmacy -> {
+                    if(name != "") {
+                        return pharmacy.getName().equals(name);
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public PharmacyResponse mapPharmacyToPharmacyResponse(Pharmacy pharmacy) {

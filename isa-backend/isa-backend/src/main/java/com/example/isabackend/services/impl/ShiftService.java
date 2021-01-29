@@ -56,8 +56,11 @@ public class ShiftService implements IShiftService {
     public ShiftResponse createShift(ShiftRequest shiftRequest) {
         List<ShiftResponse> allShifts = mapShiftsToShiftResponses(_shiftRepository.findAll());
         List<ShiftResponse> myShifts = new ArrayList<>();
+
         LocalTime startShift = LocalTime.parse(shiftRequest.getStartShift());
         LocalTime endShift = LocalTime.parse(shiftRequest.getEndShift());
+        startShift = startShift.plusHours(1);
+        endShift = endShift.plusHours(1);
         int counter = 0;
         for(ShiftResponse shiftResponse: allShifts){
             if(shiftResponse.getDermatologistId() == shiftRequest.getDermatologistId()){
@@ -76,9 +79,23 @@ public class ShiftService implements IShiftService {
         if(counter == 0){
             Shift shift = createShiftEntity(shiftRequest);
             return mapShiftToShiftResponse(_shiftRepository.save(shift));
+        }else{
+            return null;
         }
-        return null;
 
+
+    }
+
+    @Override
+    public List<ShiftResponse> getAllShiftsByPharmacyId(Long id) {
+        List<Shift> allShifts = _shiftRepository.findAll();
+        List<ShiftResponse> shiftByPharmacy = new ArrayList<>();
+        for (Shift shift: allShifts) {
+            if(shift.getPharmacy().getId() == id){
+                shiftByPharmacy.add(mapShiftToShiftResponse(shift));
+            }
+        }
+        return shiftByPharmacy;
     }
 
     private Shift createShiftEntity(ShiftRequest shiftRequest) {
