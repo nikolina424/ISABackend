@@ -37,7 +37,7 @@ public class PharmacistService implements IPharmacistService {
         List<Pharmacist> allPharmacists = _pharmacistRepository.findAll();
         List<PharmacistResponse> pharmacyPharmacist = new ArrayList<>();
         for (Pharmacist pharmacist: allPharmacists) {
-            if(pharmacist.getId().equals(id)){
+            if(pharmacist.getPharmacy().getId().equals(id)){
                 pharmacyPharmacist.add(mapPharmacistToPharmacistResponse(pharmacist));
             }
         }

@@ -1,5 +1,6 @@
 package com.example.isabackend.services;
 
+import com.example.isabackend.dto.request.MedicamentRequest;
 import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.SearchMedicamentResponse;
 
@@ -13,4 +14,6 @@ public interface IMedicamentService {
     MedicamentResponse getMedicamentById(Long id);
 
     List<MedicamentResponse> getMedicamentsDoesntBelongToPharmacy(Long id);
+
+    MedicamentResponse createMedicament(MedicamentRequest request);
 }

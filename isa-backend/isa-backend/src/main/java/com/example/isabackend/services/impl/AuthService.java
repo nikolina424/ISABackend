@@ -1,8 +1,7 @@
 package com.example.isabackend.services.impl;
 
-import com.example.isabackend.dto.request.LoginRequest;
-import com.example.isabackend.dto.request.PharmacistRequest;
-import com.example.isabackend.dto.request.RegistrationRequest;
+import com.example.isabackend.controller.SupplierRequest;
+import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.PharmacyAdminResponse;
 import com.example.isabackend.dto.response.UserResponse;
 import com.example.isabackend.entity.*;
@@ -43,9 +42,15 @@ public class AuthService implements IAuthService {
 
     private final IShiftPharmacistRepository _shiftPharmacyRepository;
 
+    private final IPharmacyAdminRepository _pharmacyAdminRepository;
 
+    private final ISystemAdminRepository _systemAdminRepository;
 
-    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository) {
+    private final IDermatologistRepository _dermatologistRepository;
+
+    private final ISupplierRepository _supplierRepository;
+
+    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository, IPharmacyAdminRepository pharmacyAdminRepository, ISystemAdminRepository systemAdminRepository, IDermatologistRepository dermatologistRepository, ISupplierRepository supplierRepository) {
         _tokenUtils = tokenUtils;
         _userRepository = userRepository;
         _passwordEncoder = passwordEncoder;
@@ -55,6 +60,10 @@ public class AuthService implements IAuthService {
         _pharmacistRepository = pharmacistRepository;
         _pharmacyRepository = pharmacyRepository;
         _shiftPharmacyRepository = shiftPharmacyRepository;
+        _pharmacyAdminRepository = pharmacyAdminRepository;
+        _systemAdminRepository = systemAdminRepository;
+        _dermatologistRepository = dermatologistRepository;
+        _supplierRepository = supplierRepository;
     }
 
     @Override
@@ -149,6 +158,8 @@ public class AuthService implements IAuthService {
         pharmacist.setLastName(request.getLastName());
         pharmacist.setNumber(request.getNumber());
         pharmacist.setAddress(request.getAddress());
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        pharmacist.setPharmacy(pharmacy);
 
 
 
@@ -162,10 +173,151 @@ public class AuthService implements IAuthService {
         shiftPharmacist.setStartShift(startShift.plusHours(1));
         shiftPharmacist.setEndShift(endShift.plusHours(1));
         shiftPharmacist.setPharmacist(savedPharmacist);
-        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
         shiftPharmacist.setPharmacy(pharmacy);
         _shiftPharmacyRepository.save(shiftPharmacist);
 
+
+        return true;
+    }
+
+    @Override
+    public void changePasswordForPharmacyAdmin(Long id, ChangePasswordRequest request) {
+        PharmacyAdmin pharmacyAdmin = _pharmacyAdminRepository.findOneById(id);
+        User user = pharmacyAdmin.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+           if(request.getRePassword().equals(request.getPassword())){
+               user.setPassword(_passwordEncoder.encode(request.getPassword()));
+               PharmacyAdmin savedPharmacyAdmin = _pharmacyAdminRepository.save(pharmacyAdmin);
+               user.setPharmacyAdmin(savedPharmacyAdmin);
+               _userRepository.save(user);
+
+           }
+        }
+    }
+
+    @Override
+    public boolean registerPharmacyAdmin(PharmacyAdminRequest request) {
+        if(!request.getPassword().equals(request.getRePassword())){
+            throw new GeneralException("Passwords do not match.", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        PharmacyAdmin pharmacyAdmin = new PharmacyAdmin();
+
+        if(request.getUsername().equals(_userRepository.findOneByUsername(request.getUsername()))){
+            return false;
+        }
+        user.setUsername(request.getUsername());
+        user.setPassword(_passwordEncoder.encode(request.getPassword()));
+        user.setUserRole(UserRoles.PHARMACIST);
+        user.setHasSignedIn(false);
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(_authorityRepository.findOneByName("ROLE_PHARMACIST"));
+        user.setAuthorities(new HashSet<>(authorities));
+
+        pharmacyAdmin.setFirstName(request.getFirstName());
+        pharmacyAdmin.setLastName(request.getLastName());
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        pharmacyAdmin.setPharmacy(pharmacy);
+
+
+
+        PharmacyAdmin savedPharmacyAdmin = _pharmacyAdminRepository.save(pharmacyAdmin);
+        savedPharmacyAdmin.setUser(user);
+        user.setPharmacyAdmin(savedPharmacyAdmin);
+        _userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    public boolean registerSystemAdmin(SystemAdminRequest request) {
+        if(!request.getPassword().equals(request.getRePassword())){
+            throw new GeneralException("Passwords do not match.", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        SystemAdmin systemAdmin = new SystemAdmin();
+
+        if(request.getUsername().equals(_userRepository.findOneByUsername(request.getUsername()))){
+            return false;
+        }
+        user.setUsername(request.getUsername());
+        user.setPassword(_passwordEncoder.encode(request.getPassword()));
+        user.setUserRole(UserRoles.SYSTEM_ADMIN);
+        user.setHasSignedIn(false);
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(_authorityRepository.findOneByName("ROLE_SYSTEM_ADMIN"));
+        user.setAuthorities(new HashSet<>(authorities));
+
+        systemAdmin.setFirstName(request.getFirstName());
+        systemAdmin.setLastName(request.getLastName());
+
+
+        SystemAdmin savedSystemAdmin = _systemAdminRepository.save(systemAdmin);
+        savedSystemAdmin.setUser(user);
+        user.setSystemAdmin(savedSystemAdmin);
+        _userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    public boolean registerDermatologist(DermatologistRequest request) {
+        if(!request.getPassword().equals(request.getRePassword())){
+            throw new GeneralException("Passwords do not match.", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        Dermatologist dermatologist = new Dermatologist();
+        if(request.getUsername().equals(_userRepository.findOneByUsername(request.getUsername()))){
+            return false;
+        }
+        user.setUsername(request.getUsername());
+        user.setPassword(_passwordEncoder.encode(request.getPassword()));
+        user.setUserRole(UserRoles.DERMATOLOGIST);
+        user.setHasSignedIn(false);
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(_authorityRepository.findOneByName("ROLE_DERMATOLOGIST"));
+        user.setAuthorities(new HashSet<>(authorities));
+
+        dermatologist.setFirstName(request.getFirstName());
+        dermatologist.setLastName(request.getLastName());
+        dermatologist.setNumber(request.getNumber());
+        dermatologist.setAddress(request.getAddress());
+
+        Dermatologist savedDermatologist = _dermatologistRepository.save(dermatologist);
+        savedDermatologist.setUser(user);
+        user.setDermatologist(savedDermatologist);
+        _userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    public boolean registerSupplier(SupplierRequest request) {
+        if(!request.getPassword().equals(request.getRePassword())){
+            throw new GeneralException("Passwords do not match.", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        Supplier supplier = new Supplier();
+        if(request.getUsername().equals(_userRepository.findOneByUsername(request.getUsername()))){
+            return false;
+        }
+        user.setUsername(request.getUsername());
+        user.setPassword(_passwordEncoder.encode(request.getPassword()));
+        user.setUserRole(UserRoles.SUPPLIER);
+        user.setHasSignedIn(false);
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(_authorityRepository.findOneByName("ROLE_SUPPLIER"));
+        user.setAuthorities(new HashSet<>(authorities));
+
+        supplier.setFirstName(request.getFirstName());
+        supplier.setLastName(request.getLastName());
+        supplier.setNumber(request.getNumber());
+        supplier.setAddress(request.getAddress());
+
+        Supplier savedSupplier = _supplierRepository.save(supplier);
+        savedSupplier.setUser(user);
+        user.setSupplier(savedSupplier);
+        _userRepository.save(user);
 
         return true;
     }

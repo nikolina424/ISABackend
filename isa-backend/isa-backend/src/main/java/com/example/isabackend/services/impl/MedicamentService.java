@@ -1,16 +1,19 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.MedicamentRequest;
 import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.SearchMedicamentResponse;
-import com.example.isabackend.entity.Medicament;
-import com.example.isabackend.entity.Pharmacy;
-import com.example.isabackend.entity.PharmacyMedicament;
+import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IMedicamentRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IMedicamentService;
+import com.example.isabackend.util.GeneralException;
+import com.example.isabackend.util.enums.UserRoles;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +72,27 @@ public class MedicamentService implements IMedicamentService {
         return finalList;
     }
 
+    @Override
+    public MedicamentResponse createMedicament(MedicamentRequest request) {
+
+        Medicament medicament = new Medicament();
+
+        medicament.setName(request.getName());
+        medicament.setCode(request.getCode());
+        medicament.setContraindications(request.getContraindications());
+        medicament.setIngredients(request.getIngredients());
+        medicament.setIssuance(request.getIssuance());
+        medicament.setManufacturer(request.getManufacturer());
+        medicament.setNotes(request.getNotes());
+        medicament.setReplacement(request.getReplacement());
+        medicament.setShape(request.getShape());
+        medicament.setType(request.getType());
+
+       _medicamentRepository.save(medicament);
+
+        return mapMedicamentToMedicamentResponse(medicament);
+    }
+
     private SearchMedicamentResponse mapToSearchResponse(List<MedicamentResponse> medicamentResponses) {
         SearchMedicamentResponse searchResponse = new SearchMedicamentResponse();
         searchResponse.setMedicamentResponses(medicamentResponses);
@@ -103,6 +127,12 @@ public class MedicamentService implements IMedicamentService {
         response.setType(medicament.getType());
         response.setContraindications(medicament.getContraindications());
         response.setIngredients(medicament.getIngredients());
+        response.setCode(medicament.getCode());
+        response.setIssuance(medicament.getIssuance());
+        response.setManufacturer(medicament.getManufacturer());
+        response.setNotes(medicament.getNotes());
+        response.setShape(medicament.getShape());
+        response.setReplacement(medicament.getReplacement());
         return response;
     }
 

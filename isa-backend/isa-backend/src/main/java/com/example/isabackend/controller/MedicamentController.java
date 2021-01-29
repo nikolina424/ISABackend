@@ -1,7 +1,10 @@
 package com.example.isabackend.controller;
 
+import com.example.isabackend.dto.request.MedicamentRequest;
+import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
+import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.services.IMedicamentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +51,17 @@ public class MedicamentController {
         }
         else {
             return new ResponseEntity<>("Medicaments doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping()
+    public ResponseEntity<?>  createMedicament(@RequestBody MedicamentRequest request){
+        MedicamentResponse medicamentResponse = _medicamentService.createMedicament(request);
+        if(medicamentResponse != null) {
+            return new ResponseEntity<>(medicamentResponse, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Medicament cannot be created.", HttpStatus.NOT_FOUND);
         }
     }
 

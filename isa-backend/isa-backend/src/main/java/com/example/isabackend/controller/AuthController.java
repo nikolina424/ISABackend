@@ -1,9 +1,7 @@
 package com.example.isabackend.controller;
 
 
-import com.example.isabackend.dto.request.LoginRequest;
-import com.example.isabackend.dto.request.PharmacistRequest;
-import com.example.isabackend.dto.request.RegistrationRequest;
+import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.TempResponse;
 import com.example.isabackend.dto.response.UserResponse;
 import com.example.isabackend.security.TokenUtils;
@@ -57,6 +55,60 @@ public class AuthController {
         else{
             return new ResponseEntity<>("User already exists !", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/register-system-admin")
+    public ResponseEntity<?> registerSystemAdmin(@RequestBody SystemAdminRequest request){
+        TempResponse temp = new TempResponse();
+        temp.setText("Registered system admin");
+        if(_authService.registerSystemAdmin(request)){
+            return new ResponseEntity<>(temp, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("User already exists !", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/register-dermatologist")
+    public ResponseEntity<?> registerDermatologist(@RequestBody DermatologistRequest request){
+        TempResponse temp = new TempResponse();
+        temp.setText("Registered dermatologist");
+        if(_authService.registerDermatologist(request)){
+            return new ResponseEntity<>(temp, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("User already exists !", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/register-supplier")
+    public ResponseEntity<?> registerSupplier(@RequestBody SupplierRequest request){
+        TempResponse temp = new TempResponse();
+        temp.setText("Registered supplier");
+        if(_authService.registerSupplier(request)){
+            return new ResponseEntity<>(temp, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("User already exists !", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/register-pharmacy-admin")
+    public ResponseEntity<?> registerPharmacyAdmin(@RequestBody PharmacyAdminRequest request){
+        TempResponse temp = new TempResponse();
+        temp.setText("Registered pharmacy admin");
+        if(_authService.registerPharmacyAdmin(request)){
+            return new ResponseEntity<>(temp, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("User already exists !", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public void changePasswordForPharmacyAdmin(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForPharmacyAdmin(id, request);
+
     }
 
 

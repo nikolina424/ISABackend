@@ -1,5 +1,6 @@
 package com.example.isabackend.services;
 
+import com.example.isabackend.dto.request.PharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyRequest;
 import com.example.isabackend.dto.response.PharmacyResponse;
 
@@ -11,4 +12,6 @@ public interface IPharmacyService {
     PharmacyResponse getPharmacyById(Long id);
 
     List<PharmacyResponse> getAllPharmacies();
+
+    boolean registerPharmacy(PharmacyRequest request);
 }

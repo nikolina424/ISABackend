@@ -23,14 +23,32 @@ public class Medicament {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "shape")
+    private String shape;
+
     @Column(name = "type")
     private String type;
+
+    @Column(name = "replacement")
+    private String replacement;
 
     @Column(name = "contraindications")
     private String contraindications;
 
     @Column(name = "ingredients")
     private String ingredients;
+
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
+    @Column(name = "issuance")
+    private String issuance;
+
+    @Column(name = "notes")
+    private String notes;
 
     @OneToMany(mappedBy = "medicament", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PharmacyMedicament> pharmacistMedicaments;

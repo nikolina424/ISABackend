@@ -9,6 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Supplier {
     @Id
     @Column(name = "id")

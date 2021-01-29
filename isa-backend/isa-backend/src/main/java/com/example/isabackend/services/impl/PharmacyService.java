@@ -1,15 +1,20 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.PharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyRequest;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.PharmacyResponse;
-import com.example.isabackend.entity.Patient;
-import com.example.isabackend.entity.Pharmacy;
+import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IPharmacyService;
+import com.example.isabackend.util.GeneralException;
+import com.example.isabackend.util.enums.UserRoles;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -51,6 +56,16 @@ public class PharmacyService implements IPharmacyService {
             pharmacyResponses.add(pharmacyResponse);
         }
         return pharmacyResponses;
+    }
+
+    @Override
+    public boolean registerPharmacy(PharmacyRequest request) {
+        Pharmacy pharmacy = new Pharmacy();
+        pharmacy.setName(request.getName());
+        pharmacy.setAbout(request.getAbout());
+        pharmacy.setAddress(request.getAddress());
+        _pharmacyRepository.save(pharmacy);
+        return true;
     }
 
     public PharmacyResponse mapPharmacyToPharmacyResponse(Pharmacy pharmacy) {
