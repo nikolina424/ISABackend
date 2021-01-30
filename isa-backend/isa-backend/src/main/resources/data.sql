@@ -119,3 +119,18 @@ insert into shift_pharmacist(id, start_shift, end_shift, pharmacy_id, pharmacist
 (4, '08:00', '12:00', 4, 4),
 (5, '12:00', '18:00', 1, 5),
 (6, '12:00', '18:00', 2, 6);
+
+insert into dermatologist_examination(id, start_time_examination, end_time_examination,date_examination, price, dermatologist_id,pharmacy_id, examination_status ) values
+(1, '08:00', '09:00', '10.03.2021.', '10', 2, 2, 0),
+(2, '10:00', '11:00', '10.03.2021.', '10', 2, 2, 0),
+(3, '16:00', '17:00', '10.03.2021.', '15', 2, 4, 0),
+(4, '18:00', '19:00', '10.03.2021.', '15', 2, 4, 0),
+(5, '16:00', '17:00', '10.03.2021.', '10', 1, 3, 0);
+
+insert into medicament_reservation(id, date_to_pick, pharmacy_medicament_id, patient_id, medicament_reservation_status) values
+(1, '10.03.2021.', 7,1, 2),
+(2, '10.03.2021.', 10,1, 2),
+(3, '10.03.2021.', 11,2, 2),
+(4, '10.03.2021.', 8,2, 2),
+(5, '10.03.2021.', 16,1, 1),
+(6, '10.03.2021.', 11,1, 1);

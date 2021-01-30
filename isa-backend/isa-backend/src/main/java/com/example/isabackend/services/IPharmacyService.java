@@ -17,4 +17,6 @@ public interface IPharmacyService {
     boolean registerPharmacy(PharmacyRequest request);
 
     SearchPharmacyResponse searchPharmacies(String name);
+
+    List<PharmacyResponse> getPharmaciesByMedicamentId(Long id);
 }

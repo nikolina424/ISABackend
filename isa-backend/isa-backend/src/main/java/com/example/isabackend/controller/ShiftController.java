@@ -2,6 +2,7 @@ package com.example.isabackend.controller;
 
 
 import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.SpecialShiftRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
@@ -44,6 +45,18 @@ public class ShiftController {
         }
     }
 
+    @GetMapping("/special-shift")
+    public ResponseEntity<?> getOneDermatologistOnePharmacyShift(@RequestParam("pharmacyId") Long pharmacyId,
+                                                                 @RequestParam("dermatologistId") Long dermatologistId){
+        ShiftResponse shiftResponses = _shiftService.getOneDermatologistOnePharmacyShift(pharmacyId, dermatologistId);
+        if(shiftResponses != null) {
+            return new ResponseEntity<>(shiftResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Shift for this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping()
     public List<ShiftResponse> getAllShifts(){
         return _shiftService.getAllShifts();
@@ -59,4 +72,7 @@ public class ShiftController {
             return new ResponseEntity<>("Shift cannot be created.", HttpStatus.NOT_FOUND);
         }
     }
+
+
+
 }

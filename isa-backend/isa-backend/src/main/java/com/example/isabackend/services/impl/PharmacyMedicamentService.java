@@ -114,7 +114,7 @@ public class PharmacyMedicamentService implements IPharmacyMedicamentService {
                 .collect(Collectors.toList());
     }
 
-    private PharmacyMedicamentResponse mapPharmacyMedicamentToPharmacyMedicamentResponse(PharmacyMedicament pharmacyMedicament) {
+    public PharmacyMedicamentResponse mapPharmacyMedicamentToPharmacyMedicamentResponse(PharmacyMedicament pharmacyMedicament) {
         PharmacyMedicamentResponse pharmacyMedicamentResponse = new PharmacyMedicamentResponse();
         pharmacyMedicamentResponse.setId(pharmacyMedicament.getId());
         pharmacyMedicamentResponse.setQuantity(pharmacyMedicament.getQuantity());

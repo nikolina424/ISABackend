@@ -3,8 +3,9 @@ package com.example.isabackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity
+@Entity(name = "pharmacy_medicament")
 @Getter
 @Setter
 @Data
@@ -27,4 +28,7 @@ public class PharmacyMedicament {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicament_id")
     private Medicament medicament;
+
+    @OneToMany(mappedBy = "pharmacyMedicament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicamentReservation> medicamentReservations;
 }

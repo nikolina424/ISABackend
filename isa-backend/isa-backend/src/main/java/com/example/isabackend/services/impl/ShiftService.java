@@ -1,6 +1,7 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.SpecialShiftRequest;
 import com.example.isabackend.dto.response.PharmacyResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.Dermatologist;
@@ -96,6 +97,27 @@ public class ShiftService implements IShiftService {
             }
         }
         return shiftByPharmacy;
+    }
+
+    @Override
+    public ShiftResponse getOneDermatologistOnePharmacyShift(Long pharmacyId, Long dermatologistId) {
+        List<ShiftResponse> shiftResponses = getAllShiftByDermatologistId(dermatologistId);
+        for(ShiftResponse shiftResponse: shiftResponses){
+            if(shiftResponse.getPharmacyId().equals(pharmacyId)){
+                return shiftResponse;
+            }
+        }
+        return null;
+    }
+
+    public ShiftResponse getShiftOneDermatologOnePharmacy(Long dermatologistId, Long pharmacyId ) {
+        List<ShiftResponse> shiftResponses = getAllShiftByDermatologistId(dermatologistId);
+        for(ShiftResponse shiftResponse: shiftResponses){
+            if(shiftResponse.getPharmacyId().equals(pharmacyId)){
+                return shiftResponse;
+            }
+        }
+        return null;
     }
 
     private Shift createShiftEntity(ShiftRequest shiftRequest) {

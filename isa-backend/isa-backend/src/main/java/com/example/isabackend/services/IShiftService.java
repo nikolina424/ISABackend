@@ -1,6 +1,7 @@
 package com.example.isabackend.services;
 
 import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.SpecialShiftRequest;
 import com.example.isabackend.dto.response.ShiftResponse;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface IShiftService {
     ShiftResponse createShift(ShiftRequest shiftRequest);
 
     List<ShiftResponse> getAllShiftsByPharmacyId(Long id);
+
+    ShiftResponse getOneDermatologistOnePharmacyShift(Long pharmacyId, Long dermatologistId);
 }

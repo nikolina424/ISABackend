@@ -50,5 +50,8 @@ public class Patient {
             inverseJoinColumns = @JoinColumn(name = "medicament_id", referencedColumnName = "id"))
     private List<Medicament> medicaments;
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DermatologistExamination> dermatologistsExaminations;
+
 
 }

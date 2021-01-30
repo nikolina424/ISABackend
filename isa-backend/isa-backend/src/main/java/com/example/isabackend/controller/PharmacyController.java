@@ -49,6 +49,17 @@ public class PharmacyController {
         }
     }
 
+    @GetMapping("/medicament/{id}")
+    public ResponseEntity<?> getPharmaciesByMedicamentId(@PathVariable("id") Long id){
+        List<PharmacyResponse> pharmacyResponses = _pharmacyService.getPharmaciesByMedicamentId(id);
+        if(pharmacyResponses != null) {
+            return new ResponseEntity<>(pharmacyResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Pharmacies doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/register-pharmacy")
     public ResponseEntity<?> registerPharmacy(@RequestBody PharmacyRequest request){
         TempResponse temp = new TempResponse();

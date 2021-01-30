@@ -1,6 +1,5 @@
 package com.example.isabackend.dto.response;
 
-import org.apache.tomcat.jni.Local;
 
 import java.time.LocalTime;
 

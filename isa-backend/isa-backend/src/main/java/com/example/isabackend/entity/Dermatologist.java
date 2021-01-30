@@ -29,10 +29,9 @@ public class Dermatologist {
 
     private String address;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "pharmacy_id")
-    //private Pharmacy pharmacy;
-
     @OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shift> dermatologistShifts;
+
+    @OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DermatologistExamination> dermatologistsExaminations;
 }
