@@ -1,14 +1,15 @@
 package com.example.isabackend.controller;
 
+import com.example.isabackend.dto.request.GetIdRequest;
+import com.example.isabackend.dto.request.MedicamentReservationRequest;
+import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.response.MedicamentReservationResponse;
 import com.example.isabackend.dto.response.MedicamentResponse;
+import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.services.IMedicamentReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +41,22 @@ public class MedicamentReservationController {
         }
         else {
             return new ResponseEntity<>("Medicament reservations doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/cancel")
+        public boolean cancelReservation(@RequestBody GetIdRequest request){
+       return  _medicamentReservationService.cancelReservation(request);
+    }
+
+    @PostMapping()
+    public ResponseEntity<?>  createReservation(@RequestBody MedicamentReservationRequest request){
+        MedicamentReservationResponse response = _medicamentReservationService.createReservation(request);
+        if(response != null) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Reservation cannot be created.", HttpStatus.NOT_FOUND);
         }
     }
 }

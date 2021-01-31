@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface IMedicamentReservationRepository extends JpaRepository<MedicamentReservation, Long> {
     List<MedicamentReservation> findAllByPatient_Id(Long id);
+
+    MedicamentReservation findOneById(Long id);
 }

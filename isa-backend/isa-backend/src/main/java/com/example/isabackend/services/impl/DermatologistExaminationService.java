@@ -1,5 +1,6 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.CreateAvailableExaminationRequest;
 import com.example.isabackend.dto.response.DermatologistExaminationResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.DermatologistExamination;
@@ -54,20 +55,32 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
     }
 
     @Override
-    public DermatologistExaminationResponse createAvailableExamination(String startTimeExamination, String endTimeExamination, String dateExamination, Long pharmacyId, Long dermatologistId, Double price) {
+    public List<DermatologistExaminationResponse> getAllAvailableExaminationsByPharmacyId(Long id) {
+       List<DermatologistExamination> dermatologistExaminations = _dermatologistExaminationRepository.findAllByPharmacy_Id(id);
+       List<DermatologistExamination> finalEx = new ArrayList<>();
+       for(DermatologistExamination examination: dermatologistExaminations){
+           if(examination.getExaminationStatus().equals(ExaminationStatus.AVAILABLE)){
+               finalEx.add(examination);
+           }
+       }
+       return mapExaminationsToExaminationResponses(finalEx);
+    }
+
+    @Override
+    public DermatologistExaminationResponse createAvailableExamination(CreateAvailableExaminationRequest request) {
         List<DermatologistExaminationResponse> allExaminations = mapExaminationsToExaminationResponses(_dermatologistExaminationRepository.findAll());
         List<DermatologistExaminationResponse> myExaminationsInOneHospital = new ArrayList<>();
 
-        LocalDate dateString = LocalDate.parse(dateExamination);
-        LocalTime startString = LocalTime.parse(startTimeExamination);
-        LocalTime endString = LocalTime.parse(endTimeExamination);
+        LocalDate dateString = LocalDate.parse(request.getDateExamination());
+        LocalTime startString = LocalTime.parse(request.getStartTimeExamination());
+        LocalTime endString = LocalTime.parse(request.getEndTimeExamination());
         startString = startString.plusHours(1);
         endString = endString.plusHours(1);
 
-        ShiftResponse shiftResponse = _shiftService.getShiftOneDermatologOnePharmacy(dermatologistId,pharmacyId);
+        ShiftResponse shiftResponse = _shiftService.getShiftOneDermatologOnePharmacy(request.getDermatologistId(),request.getPharmacyId());
         for(DermatologistExaminationResponse response: allExaminations) {
-            if (response.getDermatologist().getId().equals(dermatologistId)) {
-                if (response.getPharmacyId().equals(pharmacyId)) {
+            if (response.getDermatologist().getId().equals(request.getDermatologistId())) {
+                if (response.getPharmacyId().equals(request.getPharmacyId())) {
                     myExaminationsInOneHospital.add(response);
                 }
             }
@@ -88,45 +101,32 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
             return null;
         }
 
-            for(DermatologistExaminationResponse response: myExaminationsInOneHospital){
-                if(response.getDateExamination().isEqual(dateString)){
-                    if(startString.isBefore(response.getStartTimeExamination())){
-                        if(endString.isAfter(response.getStartTimeExamination())){
-                            System.out.println("Prekidam preklapaju se");
-                            return null;
-
-                        }
-                        //OK JE JER JE PRE POCETKA TRENUTNE
-                    }else if(startString.isBefore(response.getEndTimeExamination())){
-                        //counter povecaj preklapaju se
+        for(DermatologistExaminationResponse response: myExaminationsInOneHospital){
+            if(response.getDateExamination().isEqual(dateString)){
+                if(startString.isBefore(response.getStartTimeExamination())){
+                    if(endString.isAfter(response.getStartTimeExamination())){
                         System.out.println("Prekidam preklapaju se");
                         return null;
+
                     }
+                    //OK JE JER JE PRE POCETKA TRENUTNE
+                }else if(startString.isBefore(response.getEndTimeExamination())){
+                    //counter povecaj preklapaju se
+                    System.out.println("Prekidam preklapaju se");
+                    return null;
                 }
             }
+        }
 
         DermatologistExamination finalEx = new DermatologistExamination();
         finalEx.setExaminationStatus(ExaminationStatus.AVAILABLE);
         finalEx.setEndTimeExamination(endString);
         finalEx.setStartTimeExamination(startString);
-        finalEx.setPrice(price);
+        finalEx.setPrice(request.getPrice());
         finalEx.setDateExamination(dateString);
-        finalEx.setDermatologist(_dermatologistRepository.findOneById(dermatologistId));
-        finalEx.setPharmacy(_pharmacyRepository.findOneById(pharmacyId));
+        finalEx.setDermatologist(_dermatologistRepository.findOneById(request.getDermatologistId()));
+        finalEx.setPharmacy(_pharmacyRepository.findOneById(request.getPharmacyId()));
         _dermatologistExaminationRepository.save(finalEx);
         return mapExaminationToExaminationResponse(finalEx);
-
-    }
-
-    @Override
-    public List<DermatologistExaminationResponse> getAllAvailableExaminationsByPharmacyId(Long id) {
-       List<DermatologistExamination> dermatologistExaminations = _dermatologistExaminationRepository.findAllByPharmacy_Id(id);
-       List<DermatologistExamination> finalEx = new ArrayList<>();
-       for(DermatologistExamination examination: dermatologistExaminations){
-           if(examination.getExaminationStatus().equals(ExaminationStatus.AVAILABLE)){
-               finalEx.add(examination);
-           }
-       }
-       return mapExaminationsToExaminationResponses(finalEx);
     }
 }

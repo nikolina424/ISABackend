@@ -128,12 +128,12 @@ insert into dermatologist_examination(id, start_time_examination, end_time_exami
 (5, '16:00', '17:00', '10.03.2021.', '10', 1, 3, 0);
 
 insert into medicament_reservation(id, date_to_pick, pharmacy_medicament_id, patient_id, medicament_reservation_status) values
-(1, '10.03.2021.', 7,1, 2),
-(2, '10.03.2021.', 10,1, 2),
-(3, '10.03.2021.', 11,2, 2),
-(4, '10.03.2021.', 8,2, 2),
-(5, '10.03.2021.', 16,1, 1),
-(6, '10.03.2021.', 11,1, 1);
+(1, '2021-01-20', 7,1, 2),
+(2, '2020-12-12', 10,1, 2),
+(3, '2020-12-20', 11,2, 2),
+(4, '2020-08-14', 8,2, 2),
+(5, '2021-03-25', 16,1, 1),
+(6, '2021-02-01', 11,1, 1);
 
 insert into rating(id,patient_id, grade, pharmacy_id, dermatologist_id, pharmacist_id, medicament_id) values
 (1, 1, 5, 2, null, null, null),

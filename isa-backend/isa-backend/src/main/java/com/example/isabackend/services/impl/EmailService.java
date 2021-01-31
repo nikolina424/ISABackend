@@ -1,6 +1,7 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.config.EmailContext;
+import com.example.isabackend.entity.MedicamentReservation;
 import com.example.isabackend.entity.Patient;
 import com.example.isabackend.services.IEmailService;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,15 @@ public class EmailService implements IEmailService {
         Context context = new Context();
         context.setVariable("name", String.format("%s %s", patient.getFirstName(), patient.getLastName()));
         _emailContext.send(to, subject, "deniedRegistration", context);
+    }
+
+    public void approveMedicamentReservation(MedicamentReservation savedReservation) {
+        String to = savedReservation.getPatient().getUser().getUsername();
+        System.out.println(to);
+        String subject = "Your medicament reservation has been approved.";
+        Context context = new Context();
+        context.setVariable("name", String.format("%s %s", savedReservation.getPatient().getFirstName(), savedReservation.getPatient().getLastName()));
+        context.setVariable("reservationId", String.format("%d", savedReservation.getId()));
+        _emailContext.send(to, subject, "approvedMedicamentReservation", context);
     }
 }
