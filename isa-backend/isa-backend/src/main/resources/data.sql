@@ -134,3 +134,17 @@ insert into medicament_reservation(id, date_to_pick, pharmacy_medicament_id, pat
 (4, '10.03.2021.', 8,2, 2),
 (5, '10.03.2021.', 16,1, 1),
 (6, '10.03.2021.', 11,1, 1);
+
+insert into rating(id,patient_id, grade, pharmacy_id, dermatologist_id, pharmacist_id, medicament_id) values
+(1, 1, 5, 2, null, null, null),
+(2, 1, 3, null, null, null, 6),
+(3, 1, 1, 2, null, null, null),
+(4, 1, 1, null, null, null, 3),
+(5, 2, 3, 3, null, null, null),
+(6, 2, 4, null, null, null, 3),
+(7, 2, 5, 2, null, null, null),
+(8, 2, 3,null, null, null, 10),
+(9, 1, 2, 4,null, null, null),
+(10, 1, 1, null, null, null, 4),
+(11, 1, 4, 3, null, null, null),
+(12, 1, 3, null, null, null, 3);

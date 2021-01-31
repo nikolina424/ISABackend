@@ -21,4 +21,6 @@ public class MedicamentResponse {
     private String manufacturer;
     private String issuance;
     private String notes;
+    private float rating;
+
 }

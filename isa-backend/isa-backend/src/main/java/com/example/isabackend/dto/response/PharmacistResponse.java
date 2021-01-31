@@ -17,4 +17,6 @@ public class PharmacistResponse {
     private String lastName;
     private String number;
     private String address;
+    private float rating;
+
 }

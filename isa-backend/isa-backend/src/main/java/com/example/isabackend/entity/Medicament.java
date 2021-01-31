@@ -55,5 +55,8 @@ public class Medicament {
 
     @ManyToMany(mappedBy = "medicaments")
     private Collection<Patient> patients;
+
+    @OneToMany(mappedBy = "medicament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings;
 }
 

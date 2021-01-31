@@ -1,4 +1,6 @@
 package com.example.isabackend.dto.response;
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PharmacyResponse {
+public class RatingResponse {
     private Long id;
-    private String name;
-    private String about;
-    private String address;
-    private float rating;
+
 }

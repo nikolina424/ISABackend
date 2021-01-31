@@ -34,4 +34,7 @@ public class Dermatologist {
 
     @OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DermatologistExamination> dermatologistsExaminations;
+
+    @OneToMany(mappedBy = "dermatologist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings;
 }

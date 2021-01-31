@@ -18,5 +18,7 @@ public class DermatologistResponse {
     private String number;
     private String address;
     private List<PharmacyResponse> pharmacyResponses;
-    
+    private float rating;
+
+
 }

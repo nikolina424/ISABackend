@@ -133,6 +133,22 @@ public class MedicamentService implements IMedicamentService {
         response.setNotes(medicament.getNotes());
         response.setShape(medicament.getShape());
         response.setReplacement(medicament.getReplacement());
+
+        float average = 0;
+        float sum = 0;
+        float counter = 0;
+        List<Rating> ratings = medicament.getRatings();
+        if(ratings.isEmpty()){
+            average = 5;
+        }else{
+            for(Rating r: ratings){
+                sum += r.getGrade();
+                counter++;
+            }
+            average = sum/counter;
+
+        }
+        response.setRating(average);
         return response;
     }
 

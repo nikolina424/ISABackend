@@ -31,12 +31,12 @@ public class DermatologistExaminationController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createAvailableExamination(@RequestParam("startTimeExamination") String startTimeExamination,
-                                                        @RequestParam("endTimeExamination") String endTimeExamination,
-                                                        @RequestParam("dateExamination") String dateExamination,
-                                                        @RequestParam("pharmacyId") Long pharmacyId,
-                                                        @RequestParam("dermatologistId") Long dermatologistId,
-                                                        @RequestParam("price") Double price){
+    public ResponseEntity<?> createAvailableExamination(@RequestParam(required=false,name="startTimeExamination") String startTimeExamination,
+                                                        @RequestParam(required=false,name="endTimeExamination") String endTimeExamination,
+                                                        @RequestParam(required=false,name="dateExamination") String dateExamination,
+                                                        @RequestParam(required=false,name="pharmacyId") Long pharmacyId,
+                                                        @RequestParam(required=false,name="dermatologistId") Long dermatologistId,
+                                                        @RequestParam(required=false,name="price") Double price){
         System.out.println("Pozvali su me");
         System.out.println(startTimeExamination);
         DermatologistExaminationResponse dermatologistExaminationResponse = _dermatologistExaminationService.createAvailableExamination(startTimeExamination,endTimeExamination, dateExamination, pharmacyId, dermatologistId, price);

@@ -69,6 +69,22 @@ public class PharmacistService implements IPharmacistService {
         pharmacistResponse.setUsername(pharmacist.getUser().getUsername());
         pharmacistResponse.setNumber(pharmacist.getNumber());
 
+        float average = 0;
+        float sum = 0;
+        float counter = 0;
+        List<Rating> ratings = pharmacist.getRatings();
+        if(ratings.isEmpty()){
+            average = 5;
+        }else{
+            for(Rating r: ratings){
+                sum += r.getGrade();
+                counter++;
+            }
+            average = sum/counter;
+
+        }
+        pharmacistResponse.setRating(average);
+
         return pharmacistResponse;
     }
 

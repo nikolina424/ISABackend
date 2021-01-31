@@ -5,6 +5,7 @@ import com.example.isabackend.dto.response.PharmacyResponse;
 import com.example.isabackend.dto.response.SearchDermatologistResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.Dermatologist;
+import com.example.isabackend.entity.Rating;
 import com.example.isabackend.repository.IDermatologistRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IDermatologistService;
@@ -63,6 +64,22 @@ public class DermatologistService implements IDermatologistService {
             }
         }
         dermatologistResponse.setPharmacyResponses(myPharmacies);
+
+        float average = 0;
+        float sum = 0;
+        float counter = 0;
+        List<Rating> ratings = dermatologist.getRatings();
+        if(ratings.isEmpty()){
+            average = 5;
+        }else{
+            for(Rating r: ratings){
+                sum += r.getGrade();
+                counter++;
+            }
+            average = sum/counter;
+
+        }
+        dermatologistResponse.setRating(average);
         return dermatologistResponse;
     }
 
