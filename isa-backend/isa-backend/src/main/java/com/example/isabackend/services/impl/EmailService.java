@@ -1,6 +1,7 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.config.EmailContext;
+import com.example.isabackend.entity.DermatologistExamination;
 import com.example.isabackend.entity.MedicamentReservation;
 import com.example.isabackend.entity.Patient;
 import com.example.isabackend.services.IEmailService;
@@ -43,7 +44,16 @@ public class EmailService implements IEmailService {
         String subject = "Your medicament reservation has been approved.";
         Context context = new Context();
         context.setVariable("name", String.format("%s %s", savedReservation.getPatient().getFirstName(), savedReservation.getPatient().getLastName()));
-        context.setVariable("reservationId", String.format("%d", savedReservation.getId()));
+        context.setVariable("reservationId", String.format("%s", savedReservation.getId()));
         _emailContext.send(to, subject, "approvedMedicamentReservation", context);
+    }
+
+    public void approveDermatologistExaminationReservation(DermatologistExamination savedReservation) {
+        String to = savedReservation.getPatient().getUser().getUsername();
+        System.out.println(to);
+        String subject = "Your dermatologist examination reservation has been approved.";
+        Context context = new Context();
+        context.setVariable("name", String.format("%s %s", savedReservation.getPatient().getFirstName(), savedReservation.getPatient().getLastName()));
+        _emailContext.send(to, subject, "approveDermatologistExaminationReservation", context);
     }
 }

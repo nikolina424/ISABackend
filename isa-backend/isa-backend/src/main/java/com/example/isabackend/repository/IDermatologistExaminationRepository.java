@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IDermatologistExaminationRepository extends JpaRepository<DermatologistExamination, Long> {
     List<DermatologistExamination> findAllByPharmacy_Id(Long id);
+
+    DermatologistExamination findOneById(Long id);
 }

@@ -1,11 +1,13 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.CreateAvailableExaminationRequest;
+import com.example.isabackend.dto.request.ReserveDermatologistExaminationRequest;
 import com.example.isabackend.dto.response.DermatologistExaminationResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.DermatologistExamination;
 import com.example.isabackend.repository.IDermatologistExaminationRepository;
 import com.example.isabackend.repository.IDermatologistRepository;
+import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IDermatologistExaminationService;
 import com.example.isabackend.util.enums.ExaminationStatus;
@@ -23,13 +25,17 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
     private final IDermatologistRepository _dermatologistRepository;
     private final IPharmacyRepository _pharmacyRepository;
     private final DermatologistService _dermatologistService;
+    private final IPatientRepository _patientRepository;
+    private final EmailService _emailService;
 
-    public DermatologistExaminationService(IDermatologistExaminationRepository dermatologistExaminationRepository, ShiftService shiftService, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository, DermatologistService dermatologistService) {
+    public DermatologistExaminationService(IDermatologistExaminationRepository dermatologistExaminationRepository, ShiftService shiftService, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository, DermatologistService dermatologistService, IPatientRepository patientRepository, EmailService emailService) {
         _dermatologistExaminationRepository = dermatologistExaminationRepository;
         _shiftService = shiftService;
         _dermatologistRepository = dermatologistRepository;
         _pharmacyRepository = pharmacyRepository;
         _dermatologistService = dermatologistService;
+        _patientRepository = patientRepository;
+        _emailService = emailService;
     }
 
     private List<DermatologistExaminationResponse> mapExaminationsToExaminationResponses(List<DermatologistExamination> all) {
@@ -128,5 +134,15 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         finalEx.setPharmacy(_pharmacyRepository.findOneById(request.getPharmacyId()));
         _dermatologistExaminationRepository.save(finalEx);
         return mapExaminationToExaminationResponse(finalEx);
+    }
+
+    @Override
+    public boolean reserveExamination(ReserveDermatologistExaminationRequest request) {
+        DermatologistExamination dermatologistExamination = _dermatologistExaminationRepository.findOneById(request.getReservationId());
+        dermatologistExamination.setPatient(_patientRepository.findOneById(request.getPatientId()));
+        dermatologistExamination.setExaminationStatus(ExaminationStatus.RESERVED);
+        DermatologistExamination savedReservation = _dermatologistExaminationRepository.save(dermatologistExamination);
+        _emailService.approveDermatologistExaminationReservation(savedReservation);
+        return true;
     }
 }

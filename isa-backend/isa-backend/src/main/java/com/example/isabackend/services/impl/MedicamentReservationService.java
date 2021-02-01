@@ -92,7 +92,7 @@ public class MedicamentReservationService implements IMedicamentReservationServi
     @Override
     public MedicamentReservationResponse createReservation(MedicamentReservationRequest request) {
         MedicamentReservation medicamentReservation = new MedicamentReservation();
-        medicamentReservation.setMedicamentReservationStatus(MedicamentReservationStatus.RESERVED);
+        medicamentReservation.setMedicamentReservationStatus(MedicamentReservationStatus.APPROVED);
         LocalDate date = LocalDate.parse(request.getDateToPick());
         medicamentReservation.setDateToPick(date);
 

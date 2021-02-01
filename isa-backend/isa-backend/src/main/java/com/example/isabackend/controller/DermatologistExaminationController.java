@@ -1,10 +1,9 @@
 package com.example.isabackend.controller;
 
 import com.example.isabackend.dto.request.CreateAvailableExaminationRequest;
-import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.GetIdRequest;
+import com.example.isabackend.dto.request.ReserveDermatologistExaminationRequest;
 import com.example.isabackend.dto.response.DermatologistExaminationResponse;
-import com.example.isabackend.dto.response.DermatologistResponse;
-import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.services.IDermatologistExaminationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +41,10 @@ public class DermatologistExaminationController {
         else {
             return new ResponseEntity<>("Dermatologist examination cannot be created.", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/reserve")
+    public boolean reserveExamination(@RequestBody ReserveDermatologistExaminationRequest request){
+        return  _dermatologistExaminationService.reserveExamination(request);
     }
 }
