@@ -1,9 +1,6 @@
 package com.example.isabackend.controller;
 
-import com.example.isabackend.dto.request.PharmacyAdminRequest;
-import com.example.isabackend.dto.request.PharmacyRequest;
-import com.example.isabackend.dto.request.UpdatePatientRequest;
-import com.example.isabackend.dto.request.UpdatePharmacyRequest;
+import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.PharmacyResponse;
 import com.example.isabackend.dto.response.TempResponse;
@@ -70,5 +67,20 @@ public class PharmacyController {
         else{
             return new ResponseEntity<>("Pharmacy already exists !", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/remove/medicament")
+    public boolean removeMedicament(@RequestBody RemoveFromPharmacyRequest request){
+        return _pharmacyService.removeMedicament(request);
+    }
+
+    @PutMapping("/remove/pharmacist")
+    public boolean removePharmacist(@RequestBody RemoveFromPharmacyRequest request){
+        return _pharmacyService.removePharmacist(request);
+    }
+
+    @PutMapping("/remove/dermatologist")
+    public boolean removeDermatologist(@RequestBody RemoveFromPharmacyRequest request){
+        return _pharmacyService.removeDermatologist(request);
     }
 }

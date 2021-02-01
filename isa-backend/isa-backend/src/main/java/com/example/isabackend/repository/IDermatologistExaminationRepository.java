@@ -9,4 +9,8 @@ public interface IDermatologistExaminationRepository extends JpaRepository<Derma
     List<DermatologistExamination> findAllByPharmacy_Id(Long id);
 
     DermatologistExamination findOneById(Long id);
+
+    List<DermatologistExamination> findAllByPatient_Id(Long id);
+
+    List<DermatologistExamination> findAllByDermatologist_Id(Long id);
 }

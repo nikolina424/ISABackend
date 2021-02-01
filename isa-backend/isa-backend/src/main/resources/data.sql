@@ -120,20 +120,25 @@ insert into shift_pharmacist(id, start_shift, end_shift, pharmacy_id, pharmacist
 (5, '12:00', '18:00', 1, 5),
 (6, '12:00', '18:00', 2, 6);
 
-insert into dermatologist_examination(id, start_time_examination, end_time_examination,date_examination, price, dermatologist_id,pharmacy_id, examination_status ) values
-(1, '08:00', '09:00', '10.03.2021.', '10', 2, 2, 0),
-(2, '10:00', '11:00', '10.03.2021.', '10', 2, 2, 0),
-(3, '16:00', '17:00', '10.03.2021.', '15', 2, 4, 0),
-(4, '18:00', '19:00', '10.03.2021.', '15', 2, 4, 0),
-(5, '16:00', '17:00', '10.03.2021.', '10', 1, 3, 0);
+insert into dermatologist_examination(id, start_time_examination, end_time_examination,date_examination, price, dermatologist_id,pharmacy_id, examination_status, patient_id ) values
+(1, '08:00', '09:00', '2021-01-20', '10', 2, 2, 0, null),
+(2, '10:00', '11:00', '2021-01-20', '10', 2, 2, 0, null),
+(3, '16:00', '17:00', '2021-01-20', '15', 2, 4, 0, null),
+(4, '18:00', '19:00', '2021-01-20', '15', 2, 4, 0, null),
+(5, '16:00', '17:00', '2021-01-20', '10', 1, 3, 0, null),
+(6, '08:00', '09:00', '2021-02-20', '10', 2, 2, 1, 1),
+(7, '10:00', '11:00', '2021-02-20', '10', 2, 2, 1, 1),
+(8, '16:00', '17:00', '2020-02-20', '15', 2, 4, 2, 1),
+(9, '18:00', '19:00', '2020-02-20', '15', 2, 4, 2, 1),
+(10, '16:00', '17:00', '2020-02-20', '10', 1, 3, 2, 1);
 
 insert into medicament_reservation(id, date_to_pick, pharmacy_medicament_id, patient_id, medicament_reservation_status) values
-(1, '2021-01-20', 7,1, 2),
-(2, '2020-12-12', 10,1, 2),
-(3, '2020-12-20', 11,2, 2),
-(4, '2020-08-14', 8,2, 2),
-(5, '2021-03-25', 16,1, 1),
-(6, '2021-02-01', 11,1, 1);
+(1, '2021-01-20', 7,1, 1),
+(2, '2020-12-12', 10,1, 1),
+(3, '2020-12-20', 11,2, 1),
+(4, '2020-08-14', 8,2, 1),
+(5, '2021-03-25', 16,1, 0),
+(6, '2021-02-01', 11,1, 0);
 
 insert into rating(id,patient_id, grade, pharmacy_id, dermatologist_id, pharmacist_id, medicament_id) values
 (1, 1, 5, 2, null, null, null),

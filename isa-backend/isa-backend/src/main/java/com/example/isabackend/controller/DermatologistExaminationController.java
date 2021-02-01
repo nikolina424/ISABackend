@@ -47,4 +47,31 @@ public class DermatologistExaminationController {
     public boolean reserveExamination(@RequestBody ReserveDermatologistExaminationRequest request){
         return  _dermatologistExaminationService.reserveExamination(request);
     }
+
+    @GetMapping("/dropped/{id}/patient")
+    public ResponseEntity<?> getAllDroppedReservationByPatientId(@PathVariable("id") Long id){
+        List<DermatologistExaminationResponse> responses = _dermatologistExaminationService.getAllDroppedReservationByPatientId(id);
+        if(responses != null) {
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Examinations in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/active/{id}/patient")
+    public ResponseEntity<?> getAllActiveReservationByPatientId(@PathVariable("id") Long id){
+        List<DermatologistExaminationResponse> responses = _dermatologistExaminationService.getAllActiveReservationByPatientId(id);
+        if(responses != null) {
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Examinations in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/cancel")
+    public boolean cancelReservation(@RequestBody GetIdRequest request){
+        return  _dermatologistExaminationService.cancelReservation(request);
+    }
 }

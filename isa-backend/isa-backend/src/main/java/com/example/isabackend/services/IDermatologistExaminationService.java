@@ -14,4 +14,10 @@ public interface IDermatologistExaminationService {
     DermatologistExaminationResponse createAvailableExamination(CreateAvailableExaminationRequest request);
 
     boolean reserveExamination(ReserveDermatologistExaminationRequest request);
+
+    List<DermatologistExaminationResponse> getAllDroppedReservationByPatientId(Long id);
+
+    List<DermatologistExaminationResponse> getAllActiveReservationByPatientId(Long id);
+
+    boolean cancelReservation(GetIdRequest request);
 }

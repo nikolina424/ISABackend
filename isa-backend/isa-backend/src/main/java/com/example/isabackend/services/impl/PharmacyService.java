@@ -1,13 +1,14 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.PharmacyRequest;
+import com.example.isabackend.dto.request.RemoveFromPharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyRequest;
 import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
-import com.example.isabackend.repository.IMedicamentRepository;
-import com.example.isabackend.repository.IPharmacyMedicamentRepository;
-import com.example.isabackend.repository.IPharmacyRepository;
+import com.example.isabackend.repository.*;
 import com.example.isabackend.services.IPharmacyService;
+import com.example.isabackend.util.enums.ExaminationStatus;
+import com.example.isabackend.util.enums.MedicamentReservationStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +20,21 @@ public class PharmacyService implements IPharmacyService {
     private final IPharmacyRepository _pharmacyRepository;
     private final IMedicamentRepository _medicamentRepository;
     private final IPharmacyMedicamentRepository _phRepository;
+    private final IMedicamentReservationRepository _mrRepository;
+    private final IDermatologistRepository _dermatologistRepository;
+    private final IDermatologistExaminationRepository _deRepository;
+    private final IShiftRepository _shiftRepository;
+    private final ShiftService _shiftService;
 
-    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository) {
+    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository, IMedicamentReservationRepository mrRepository, IDermatologistRepository dermatologistRepository, IDermatologistExaminationRepository deRepository, IShiftRepository shiftRepository, ShiftService shiftService) {
         _pharmacyRepository = pharmacyRepository;
         _medicamentRepository = medicamentRepository;
         _phRepository = phRepository;
+        _mrRepository = mrRepository;
+        _dermatologistRepository = dermatologistRepository;
+        _deRepository = deRepository;
+        _shiftRepository = shiftRepository;
+        _shiftService = shiftService;
     }
 
     @Override
@@ -86,6 +97,65 @@ public class PharmacyService implements IPharmacyService {
             pharmacies.add(pharmacy);
         }
         return mapPharmacyListToPharmacyResponseList(pharmacies);
+    }
+
+    @Override
+    public boolean removeMedicament(RemoveFromPharmacyRequest request) {
+        PharmacyMedicament pharmacyMedicament = _phRepository.findOneById(request.getItemId());
+        List<MedicamentReservation> medicamentReservations = _mrRepository.findAllByPharmacyMedicament_Id(pharmacyMedicament.getId());
+        for (MedicamentReservation mr: medicamentReservations) {
+            if(mr.getMedicamentReservationStatus() == MedicamentReservationStatus.RESERVED){
+                return false;
+            }
+
+        }
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        List<PharmacyMedicament> pharmacyMedicaments =  pharmacy.getPharmacistMedicaments();
+        pharmacyMedicaments.remove(pharmacyMedicament);
+        pharmacy.setPharmacistMedicaments(pharmacyMedicaments);
+        _pharmacyRepository.save(pharmacy);
+        return true;
+    }
+
+    @Override
+    public boolean removePharmacist(RemoveFromPharmacyRequest request) {
+        return false;
+    }
+
+    @Override
+    public boolean removeDermatologist(RemoveFromPharmacyRequest request) {
+
+       /* Dermatologist dermatologist = _dermatologistRepository.findOneById(request.getItemId());
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        List<DermatologistExamination> finalList = _deRepository.findAllByPharmacy_Id(pharmacy.getId());
+        Shift dermatologistShift = _shiftRepository.findOneByDermatologistId(dermatologist.getId());
+        List<Shift> allShifts = _shiftRepository.findAll();
+        for(Shift shift: allShifts){
+            if(shift.getId() == dermatologistShift.getId()){
+                allShifts.remove(shift);
+            }
+        }*/
+       /* for (DermatologistExamination de: finalList) {
+            System.out.println(de.getId());
+            System.out.println("Id");
+
+            if(de.getDermatologist().getId() == dermatologist.getId()){
+                if(de.getPharmacy().getId() == pharmacy.getId()){
+                    if(de.getExaminationStatus() == ExaminationStatus.RESERVED){
+                        return false;
+                    }else if(de.getExaminationStatus() == ExaminationStatus.AVAILABLE){
+                        finalList.remove(de);
+                        System.out.println(de.getId());
+                    }
+                }
+            }
+        }*/
+        //System.out.println("Trebam izbaciti");
+        //pharmacy.setDermatologistsExaminations(finalList);
+       // pharmacy.set
+       // pharmacy.setDermatologistShifts(allShifts);
+       // _pharmacyRepository.save(pharmacy);
+        return true;
     }
 
     private SearchPharmacyResponse mapToSearchResponse(List<PharmacyResponse> pharmacyResponses) {

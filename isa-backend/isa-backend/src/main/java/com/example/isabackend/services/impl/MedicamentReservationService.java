@@ -63,7 +63,7 @@ public class MedicamentReservationService implements IMedicamentReservationServi
         List<MedicamentReservation> medicamentReservations = _medicamentReservationRepository.findAllByPatient_Id(id);
         List<MedicamentReservationResponse> responses = new ArrayList<>();
         for (MedicamentReservation m: medicamentReservations) {
-            if(m.getMedicamentReservationStatus().equals(MedicamentReservationStatus.RESERVED) || m.getMedicamentReservationStatus().equals(MedicamentReservationStatus.APPROVED)){
+            if(m.getMedicamentReservationStatus().equals(MedicamentReservationStatus.RESERVED)){
                 MedicamentReservationResponse medicamentResponse = mapMedicamentReservationToMedicamentReservationResponse(m);
                 responses.add(medicamentResponse);
             }
@@ -81,18 +81,29 @@ public class MedicamentReservationService implements IMedicamentReservationServi
         System.out.println(pickupDate);
         LocalDate pickupDate24Hours = pickupDate.minusDays(1);
         System.out.println(pickupDate24Hours);
+
+
+
         if(now.isBefore(pickupDate24Hours)){
             medicamentReservation.setMedicamentReservationStatus(MedicamentReservationStatus.CANCELED);
             _medicamentReservationRepository.save(medicamentReservation);
+            PharmacyMedicament pharmacyMedicament = _pharmacyMedicamentRepository.findOneById(medicamentReservation.getPharmacyMedicament().getPharmacy().getId());
+            int quantity = pharmacyMedicament.getQuantity() + 1;
+
+            pharmacyMedicament.setQuantity(quantity);
+            _pharmacyMedicamentRepository.save(pharmacyMedicament);
+
             return true;
         }
+
+
         return false;
     }
 
     @Override
     public MedicamentReservationResponse createReservation(MedicamentReservationRequest request) {
         MedicamentReservation medicamentReservation = new MedicamentReservation();
-        medicamentReservation.setMedicamentReservationStatus(MedicamentReservationStatus.APPROVED);
+        medicamentReservation.setMedicamentReservationStatus(MedicamentReservationStatus.RESERVED);
         LocalDate date = LocalDate.parse(request.getDateToPick());
         medicamentReservation.setDateToPick(date);
 

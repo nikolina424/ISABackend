@@ -17,7 +17,7 @@ public class DermatologistExaminationResponse {
     private LocalDate dateExamination;
     private double price;
     private DermatologistResponse dermatologist;
-    private Long pharmacyId;
+    private PharmacyResponse pharmacy;
     private String examinationStatus;
     private Long patientId;
 }

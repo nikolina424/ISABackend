@@ -1,16 +1,20 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.CreateAvailableExaminationRequest;
+import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.ReserveDermatologistExaminationRequest;
 import com.example.isabackend.dto.response.DermatologistExaminationResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
+import com.example.isabackend.entity.Dermatologist;
 import com.example.isabackend.entity.DermatologistExamination;
+import com.example.isabackend.entity.MedicamentReservation;
 import com.example.isabackend.repository.IDermatologistExaminationRepository;
 import com.example.isabackend.repository.IDermatologistRepository;
 import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IDermatologistExaminationService;
 import com.example.isabackend.util.enums.ExaminationStatus;
+import com.example.isabackend.util.enums.MedicamentReservationStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,8 +31,10 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
     private final DermatologistService _dermatologistService;
     private final IPatientRepository _patientRepository;
     private final EmailService _emailService;
+    private final PatientService _patientService;
+    private final  PharmacyService _pharmacyService;
 
-    public DermatologistExaminationService(IDermatologistExaminationRepository dermatologistExaminationRepository, ShiftService shiftService, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository, DermatologistService dermatologistService, IPatientRepository patientRepository, EmailService emailService) {
+    public DermatologistExaminationService(IDermatologistExaminationRepository dermatologistExaminationRepository, ShiftService shiftService, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository, DermatologistService dermatologistService, IPatientRepository patientRepository, EmailService emailService, PatientService patientService, PharmacyService pharmacyService) {
         _dermatologistExaminationRepository = dermatologistExaminationRepository;
         _shiftService = shiftService;
         _dermatologistRepository = dermatologistRepository;
@@ -36,6 +42,8 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         _dermatologistService = dermatologistService;
         _patientRepository = patientRepository;
         _emailService = emailService;
+        _patientService = patientService;
+        _pharmacyService = pharmacyService;
     }
 
     private List<DermatologistExaminationResponse> mapExaminationsToExaminationResponses(List<DermatologistExamination> all) {
@@ -54,8 +62,12 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         response.setStartTimeExamination(dermatologistExamination.getStartTimeExamination());
         response.setEndTimeExamination(dermatologistExamination.getEndTimeExamination());
         response.setDermatologist(_dermatologistService.mapDermatologistToDermatologistResponse(dermatologistExamination.getDermatologist()));
-        response.setPharmacyId(dermatologistExamination.getPharmacy().getId());
+        response.setPharmacy(_pharmacyService.mapPharmacyToPharmacyResponse(dermatologistExamination.getPharmacy()));
         response.setPrice(dermatologistExamination.getPrice());
+        if(dermatologistExamination.getPatient() != null){
+            response.setPatientId(dermatologistExamination.getPatient().getId());
+        }
+
         response.setExaminationStatus(dermatologistExamination.getExaminationStatus().toString());
         return response;
     }
@@ -86,7 +98,7 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         ShiftResponse shiftResponse = _shiftService.getShiftOneDermatologOnePharmacy(request.getDermatologistId(),request.getPharmacyId());
         for(DermatologistExaminationResponse response: allExaminations) {
             if (response.getDermatologist().getId().equals(request.getDermatologistId())) {
-                if (response.getPharmacyId().equals(request.getPharmacyId())) {
+                if (response.getPharmacy().getId().equals(request.getPharmacyId())) {
                     myExaminationsInOneHospital.add(response);
                 }
             }
@@ -144,5 +156,46 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         DermatologistExamination savedReservation = _dermatologistExaminationRepository.save(dermatologistExamination);
         _emailService.approveDermatologistExaminationReservation(savedReservation);
         return true;
+    }
+
+    @Override
+    public List<DermatologistExaminationResponse> getAllDroppedReservationByPatientId(Long id) {
+        List<DermatologistExamination> finalEx = new ArrayList<>();
+        List<DermatologistExamination> patientExaminations = _dermatologistExaminationRepository.findAllByPatient_Id(id);
+        for(DermatologistExamination examination: patientExaminations){
+            if(examination.getExaminationStatus().equals(ExaminationStatus.DROPPED)){
+                finalEx.add(examination);
+            }
+        }
+        return mapExaminationsToExaminationResponses(finalEx);
+    }
+
+    @Override
+    public List<DermatologistExaminationResponse> getAllActiveReservationByPatientId(Long id) {
+        List<DermatologistExamination> finalEx = new ArrayList<>();
+        List<DermatologistExamination> patientExaminations = _dermatologistExaminationRepository.findAllByPatient_Id(id);
+        for(DermatologistExamination examination: patientExaminations){
+            if(examination.getExaminationStatus().equals(ExaminationStatus.RESERVED)){
+                finalEx.add(examination);
+            }
+        }
+        return mapExaminationsToExaminationResponses(finalEx);
+    }
+
+    @Override
+    public boolean cancelReservation(GetIdRequest request) {
+        DermatologistExamination dermatologistExamination = _dermatologistExaminationRepository.findOneById(request.getId());
+        LocalDate now = LocalDate.now();
+        System.out.println(now);
+        LocalDate dateExamination = dermatologistExamination.getDateExamination();
+        System.out.println(dateExamination);
+        LocalDate pickupDate24Hours = dateExamination.minusDays(1);
+        System.out.println(pickupDate24Hours);
+        if(now.isBefore(pickupDate24Hours)){
+            dermatologistExamination.setExaminationStatus(ExaminationStatus.AVAILABLE);
+            _dermatologistExaminationRepository.save(dermatologistExamination);
+            return true;
+        }
+        return false;
     }
 }
