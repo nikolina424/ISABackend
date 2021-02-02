@@ -1,16 +1,18 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.RemoveDermatologistsShiftRequest;
 import com.example.isabackend.dto.request.ShiftRequest;
-import com.example.isabackend.dto.request.SpecialShiftRequest;
-import com.example.isabackend.dto.response.PharmacyResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.Dermatologist;
+import com.example.isabackend.entity.DermatologistExamination;
 import com.example.isabackend.entity.Pharmacy;
 import com.example.isabackend.entity.Shift;
+import com.example.isabackend.repository.IDermatologistExaminationRepository;
 import com.example.isabackend.repository.IDermatologistRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.repository.IShiftRepository;
 import com.example.isabackend.services.IShiftService;
+import com.example.isabackend.util.enums.ExaminationStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -23,11 +25,13 @@ public class ShiftService implements IShiftService {
     private final IShiftRepository _shiftRepository;
     private final IDermatologistRepository _dermatologistRepository;
     private final IPharmacyRepository _pharmacyRepository;
+    private final IDermatologistExaminationRepository _dermatologistExaminationRepository;
 
-    public ShiftService(IShiftRepository shiftRepository, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository) {
+    public ShiftService(IShiftRepository shiftRepository, IDermatologistRepository dermatologistRepository, IPharmacyRepository pharmacyRepository, IDermatologistExaminationRepository dermatologistExaminationRepository) {
         _shiftRepository = shiftRepository;
         _dermatologistRepository = dermatologistRepository;
         _pharmacyRepository = pharmacyRepository;
+        _dermatologistExaminationRepository = dermatologistExaminationRepository;
     }
 
     @Override
@@ -109,6 +113,40 @@ public class ShiftService implements IShiftService {
         }
         return null;
     }
+
+    @Override
+    public int removeDermatologistFromPharmacy(RemoveDermatologistsShiftRequest request) {
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        Dermatologist dermatologist = _dermatologistRepository.findOneById(request.getDermatologistId());
+        int counter = 0;
+        Shift shift = new Shift();
+        List<Shift> dermatologistShifts =  _shiftRepository.findAllByDermatologist_Id(dermatologist.getId());
+        for (Shift shift1: dermatologistShifts){
+            if(shift1.getPharmacy().getId() == pharmacy.getId()){
+                counter = 1;
+                shift = shift1;
+            }
+        }
+        List<DermatologistExamination> dermatologistExaminations = _dermatologistExaminationRepository.findAllByDermatologist_Id(dermatologist.getId());
+        for(DermatologistExamination de: dermatologistExaminations){
+            System.out.println(de.getDermatologist().getFirstName());
+            if(de.getPharmacy().getId() == pharmacy.getId()){
+                System.out.println(de.getPharmacy().getName());
+                System.out.println("Povecavam counter jer sam pronasao vezu");
+                if(de.getExaminationStatus().equals(ExaminationStatus.RESERVED)){
+                    return 3;
+                }else if(de.getExaminationStatus().equals(ExaminationStatus.AVAILABLE)){
+                    _dermatologistExaminationRepository.delete(de);
+                }
+            }
+        }
+        if(counter != 1){
+            return 2;
+        }
+        _shiftRepository.delete(shift);
+        return 1;
+    }
+
 
     public ShiftResponse getShiftOneDermatologOnePharmacy(Long dermatologistId, Long pharmacyId ) {
         List<ShiftResponse> shiftResponses = getAllShiftByDermatologistId(dermatologistId);

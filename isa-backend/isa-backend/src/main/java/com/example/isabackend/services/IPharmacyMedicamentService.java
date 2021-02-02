@@ -1,6 +1,7 @@
 package com.example.isabackend.services;
 
 import com.example.isabackend.dto.request.AddMedicamentToPharmacyRequest;
+import com.example.isabackend.dto.request.RemoveFromPharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyMedicamentRequest;
 import com.example.isabackend.dto.response.PharmacyMedicamentResponse;
 import com.example.isabackend.dto.response.SearchMedicamentResponse;
@@ -19,4 +20,5 @@ public interface IPharmacyMedicamentService {
 
     void updatePharmacyMedicament(Long id, UpdatePharmacyMedicamentRequest request);
 
+    boolean removeMedicamentFromPharmacy(RemoveFromPharmacyRequest request);
 }

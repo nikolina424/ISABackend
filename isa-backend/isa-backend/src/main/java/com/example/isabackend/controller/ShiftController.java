@@ -1,6 +1,7 @@
 package com.example.isabackend.controller;
 
 
+import com.example.isabackend.dto.request.RemoveDermatologistsShiftRequest;
 import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.request.SpecialShiftRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
@@ -71,6 +72,11 @@ public class ShiftController {
         else {
             return new ResponseEntity<>("Shift cannot be created.", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/remove")
+    public int  removeDermatologistFromPharmacy(@RequestBody RemoveDermatologistsShiftRequest request){
+        return _shiftService.removeDermatologistFromPharmacy(request);
     }
 
 

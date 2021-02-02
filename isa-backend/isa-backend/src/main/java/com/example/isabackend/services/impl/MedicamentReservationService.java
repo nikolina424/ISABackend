@@ -2,13 +2,12 @@ package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.request.MedicamentReservationRequest;
+import com.example.isabackend.dto.request.RemoveFromPharmacyRequest;
 import com.example.isabackend.dto.response.MedicamentReservationResponse;
-import com.example.isabackend.entity.MedicamentReservation;
-import com.example.isabackend.entity.PharmacyMedicament;
-import com.example.isabackend.repository.IMedicamentReservationRepository;
-import com.example.isabackend.repository.IPatientRepository;
-import com.example.isabackend.repository.IPharmacyMedicamentRepository;
+import com.example.isabackend.entity.*;
+import com.example.isabackend.repository.*;
 import com.example.isabackend.services.IMedicamentReservationService;
+import com.example.isabackend.util.enums.ExaminationStatus;
 import com.example.isabackend.util.enums.MedicamentReservationStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +23,19 @@ public class MedicamentReservationService implements IMedicamentReservationServi
     private final IPatientRepository _patientRepository;
     private final IPharmacyMedicamentRepository _pharmacyMedicamentRepository;
     private final EmailService _emailService;
+    private final IPharmacyRepository _pharmacyRepository;
+    private final IMedicamentRepository _medicamentRepository;
 
-    public MedicamentReservationService(IMedicamentReservationRepository medicamentReservationRepository, PharmacyMedicamentService pharmacyMedicamentService, IPatientRepository patientRepository, IPharmacyMedicamentRepository pharmacyMedicamentRepository, EmailService emailService) {
+
+
+    public MedicamentReservationService(IMedicamentReservationRepository medicamentReservationRepository, PharmacyMedicamentService pharmacyMedicamentService, IPatientRepository patientRepository, IPharmacyMedicamentRepository pharmacyMedicamentRepository, EmailService emailService, IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository) {
         _medicamentReservationRepository = medicamentReservationRepository;
         _pharmacyMedicamentService = pharmacyMedicamentService;
         _patientRepository = patientRepository;
         _pharmacyMedicamentRepository = pharmacyMedicamentRepository;
         _emailService = emailService;
+        _pharmacyRepository = pharmacyRepository;
+        _medicamentRepository = medicamentRepository;
     }
 
     @Override
@@ -120,4 +125,6 @@ public class MedicamentReservationService implements IMedicamentReservationServi
         _emailService.approveMedicamentReservation(savedReservation);
         return mapMedicamentReservationToMedicamentReservationResponse(savedReservation);
     }
+
+
 }

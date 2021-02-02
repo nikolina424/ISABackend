@@ -1,10 +1,7 @@
 package com.example.isabackend.controller;
 
 
-import com.example.isabackend.dto.request.AddMedicamentToPharmacyRequest;
-import com.example.isabackend.dto.request.ShiftRequest;
-import com.example.isabackend.dto.request.UpdatePharmacyMedicamentRequest;
-import com.example.isabackend.dto.request.UpdatePharmacyRequest;
+import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.PharmacyMedicament;
 import com.example.isabackend.services.IPharmacyMedicamentService;
@@ -65,6 +62,11 @@ public class PharmacyMedicamentController {
     @PutMapping("/{id}")
     public void updatePharmacyMedicament(@PathVariable("id")Long id, @RequestBody UpdatePharmacyMedicamentRequest request){
         _pharmacyMedicamentService.updatePharmacyMedicament(id, request);
+    }
+
+    @PostMapping("/remove")
+    public boolean  removeMedicamentFromPharmacy(@RequestBody RemoveFromPharmacyRequest request){
+        return _pharmacyMedicamentService.removeMedicamentFromPharmacy(request);
     }
 
 }

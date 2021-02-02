@@ -31,4 +31,5 @@ public class Shift {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dermatologist_id")
     private Dermatologist dermatologist;
+
 }

@@ -1,13 +1,17 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.AddMedicamentToPharmacyRequest;
+import com.example.isabackend.dto.request.RemoveFromPharmacyRequest;
 import com.example.isabackend.dto.request.UpdatePharmacyMedicamentRequest;
 import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IMedicamentRepository;
+import com.example.isabackend.repository.IMedicamentReservationRepository;
 import com.example.isabackend.repository.IPharmacyMedicamentRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.services.IPharmacyMedicamentService;
+import com.example.isabackend.util.enums.ExaminationStatus;
+import com.example.isabackend.util.enums.MedicamentReservationStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,13 +25,15 @@ public class PharmacyMedicamentService implements IPharmacyMedicamentService {
     private final PharmacyService _pharmacyService;
     private final IPharmacyRepository _pharmacyRepository;
     private final IMedicamentRepository _medicamentRepository;
+    private final IMedicamentReservationRepository _medicamentReservationRepository;
 
-    public PharmacyMedicamentService(IPharmacyMedicamentRepository pharmacyMedicamentRepository, MedicamentService medicamentService, PharmacyService pharmacyService, IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository) {
+    public PharmacyMedicamentService(IPharmacyMedicamentRepository pharmacyMedicamentRepository, MedicamentService medicamentService, PharmacyService pharmacyService, IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IMedicamentReservationRepository medicamentReservationRepository) {
         _pharmacyMedicamentRepository = pharmacyMedicamentRepository;
         _medicamentService = medicamentService;
         _pharmacyService = pharmacyService;
         _pharmacyRepository = pharmacyRepository;
         _medicamentRepository = medicamentRepository;
+        _medicamentReservationRepository = medicamentReservationRepository;
     }
 
     @Override
@@ -112,6 +118,38 @@ public class PharmacyMedicamentService implements IPharmacyMedicamentService {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean removeMedicamentFromPharmacy(RemoveFromPharmacyRequest request) {
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
+        System.out.println(pharmacy.getName());
+        System.out.println("Ovo je id apoteke iz koje hocu da izbrisem lek");
+        System.out.println(pharmacy.getId());
+        PharmacyMedicament pharmacyMedicament = _pharmacyMedicamentRepository.findOneById(request.getItemId());
+        System.out.println("Ovo je lek koji zelim da izbacim");
+        System.out.println(pharmacyMedicament.getMedicament().getName());
+
+        List<MedicamentReservation> medicamentReservations = _medicamentReservationRepository.findAll();
+        List<MedicamentReservation> pharmacyMedicamentReservation = new ArrayList<>();
+        for(MedicamentReservation mr: medicamentReservations){
+            if(mr.getPharmacyMedicament().getId() == pharmacyMedicament.getId()){
+                pharmacyMedicamentReservation.add(mr);
+                System.out.println(mr.getMedicamentReservationStatus());
+                System.out.println("usao sam jer imam isti id apoteke");
+            }
+        }
+        for(MedicamentReservation mr: pharmacyMedicamentReservation){
+            System.out.println("ovo mi je status");
+            System.out.println(mr.getMedicamentReservationStatus().toString());
+                if(mr.getMedicamentReservationStatus().equals(MedicamentReservationStatus.RESERVED)){
+                    System.out.println("status mi je reserved tako da prekidam fju");
+                    return false;
+                }
+
+        }
+        _pharmacyMedicamentRepository.delete(pharmacyMedicament);
+        return true;
     }
 
     public PharmacyMedicamentResponse mapPharmacyMedicamentToPharmacyMedicamentResponse(PharmacyMedicament pharmacyMedicament) {

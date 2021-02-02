@@ -15,5 +15,5 @@ public interface IMedicamentReservationRepository extends JpaRepository<Medicame
 
     List<MedicamentReservation> findAllByPharmacyMedicament_Id(Long id);
 
-    //List<MedicamentReservation> findAllByMedicamentReservation_Id(Long id);
+
 }

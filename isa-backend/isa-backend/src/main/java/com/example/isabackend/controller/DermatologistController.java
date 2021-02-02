@@ -1,8 +1,10 @@
 package com.example.isabackend.controller;
 
+import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
 import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
+import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.services.IDermatologistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,7 @@ public class DermatologistController {
     public ResponseEntity<?> searchDermatologists(@RequestParam("firstName") String firstName, @RequestParam(value="lastName") String lastName){
         return new ResponseEntity<>(_dermatologistService.searchDermatologists(firstName, lastName), HttpStatus.OK);
     }
+
 
 
 
