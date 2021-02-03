@@ -201,3 +201,9 @@ insert into complaint(id, text, pharmacy_id, dermatologist_id, pharmacist_id, pa
 (8, 'Complaint on pharmacy', 3, null, null, 2, false),
 (9, 'Complaint on pharmacy', 4, null, null, 2, false),
 (10, 'Complaint on pharmacy', 1, null, null, 1, false);
+
+insert into pharmacist_examination(id, start_time_examination, end_time_examination, date_examination, shift_pharmacist_id, patient_id, examination_status, price)values
+(1, '08:00', '09:00','2021-03-10', 1,1,1, 43),(2, '11:00', '12:00','2021-03-11',  2,1,1, 22),(3,  '09:00', '10:00','2021-03-12', 3,1, 1, 32),
+(4, '09:00', '10:00','2021-03-10', 1,2,1, 21),(5, '15:00', '16:00','2021-03-01', 5,2, 1, 54),(6,  '14:00', '15:00', '2021-10-18',6,2, 1, 23),
+(7, '08:00', '09:00','2020-03-10', 1,1,2, 21),(8, '11:00', '12:00','2020-03-11',  2,1,2, 19),(9,  '09:00', '10:00','2020-03-12', 3,1, 2, 33),
+(10, '09:00', '10:00','2020-03-10', 1,2,2, 55),(11, '15:00', '16:00','2020-03-01', 5,2,2, 15),(12,  '14:00', '15:00', '2020-10-18',6,2, 2, 22);

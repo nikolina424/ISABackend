@@ -21,10 +21,11 @@ public interface IPharmacyService {
 
     List<PharmacyResponse> getPharmaciesByMedicamentId(Long id);
 
-
     boolean removeMedicament(RemoveFromPharmacyRequest request);
 
     boolean removePharmacist(RemoveFromPharmacyRequest request);
 
     boolean removeDermatologist(RemoveFromPharmacyRequest request);
+
+    List<PharmacyResponse> getPharmaciesByDate(String dateExamination, String startExamination, String endExamination);
 }

@@ -46,7 +46,7 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         _pharmacyService = pharmacyService;
     }
 
-    private List<DermatologistExaminationResponse> mapExaminationsToExaminationResponses(List<DermatologistExamination> all) {
+    public List<DermatologistExaminationResponse> mapExaminationsToExaminationResponses(List<DermatologistExamination> all) {
         List<DermatologistExaminationResponse> responses = new ArrayList<>();
         for(DermatologistExamination dermatologistExamination: all){
             DermatologistExaminationResponse response = mapExaminationToExaminationResponse(dermatologistExamination);
@@ -55,7 +55,7 @@ public class DermatologistExaminationService implements IDermatologistExaminatio
         return responses;
     }
 
-    private DermatologistExaminationResponse mapExaminationToExaminationResponse(DermatologistExamination dermatologistExamination) {
+    public DermatologistExaminationResponse mapExaminationToExaminationResponse(DermatologistExamination dermatologistExamination) {
         DermatologistExaminationResponse response = new DermatologistExaminationResponse();
         response.setId(dermatologistExamination.getId());
         response.setDateExamination(dermatologistExamination.getDateExamination());

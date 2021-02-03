@@ -46,6 +46,19 @@ public class PharmacyController {
         }
     }
 
+    @GetMapping("/date")
+    public ResponseEntity<?> getPharmaciesByDate(@RequestParam("dateExamination") String dateExamination,
+                                                 @RequestParam("startExamination") String startExamination,
+                                                 @RequestParam("endExamination") String endExamination){
+        List<PharmacyResponse> pharmacyResponses = _pharmacyService.getPharmaciesByDate(dateExamination,startExamination,endExamination );
+        if(pharmacyResponses != null) {
+            return new ResponseEntity<>(pharmacyResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Pharmacies doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/medicament/{id}")
     public ResponseEntity<?> getPharmaciesByMedicamentId(@PathVariable("id") Long id){
         List<PharmacyResponse> pharmacyResponses = _pharmacyService.getPharmaciesByMedicamentId(id);

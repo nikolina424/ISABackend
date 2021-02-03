@@ -7,10 +7,12 @@ import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.*;
 import com.example.isabackend.services.IPharmacyService;
-import com.example.isabackend.util.enums.ExaminationStatus;
 import com.example.isabackend.util.enums.MedicamentReservationStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +27,10 @@ public class PharmacyService implements IPharmacyService {
     private final IDermatologistExaminationRepository _deRepository;
     private final IShiftRepository _shiftRepository;
     private final ShiftService _shiftService;
+    private final IShiftPharmacistRepository _spRepository;
+    private final IPharmacistExaminationRepository _peRepository;
 
-    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository, IMedicamentReservationRepository mrRepository, IDermatologistRepository dermatologistRepository, IDermatologistExaminationRepository deRepository, IShiftRepository shiftRepository, ShiftService shiftService) {
+    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository, IMedicamentReservationRepository mrRepository, IDermatologistRepository dermatologistRepository, IDermatologistExaminationRepository deRepository, IShiftRepository shiftRepository, ShiftService shiftService, IShiftPharmacistRepository spRepository, IPharmacistExaminationRepository peRepository) {
         _pharmacyRepository = pharmacyRepository;
         _medicamentRepository = medicamentRepository;
         _phRepository = phRepository;
@@ -35,6 +39,8 @@ public class PharmacyService implements IPharmacyService {
         _deRepository = deRepository;
         _shiftRepository = shiftRepository;
         _shiftService = shiftService;
+        _spRepository = spRepository;
+        _peRepository = peRepository;
     }
 
     @Override
@@ -123,40 +129,121 @@ public class PharmacyService implements IPharmacyService {
     }
 
     @Override
-    public boolean removeDermatologist(RemoveFromPharmacyRequest request) {
+    public boolean removeDermatologist(RemoveFromPharmacyRequest request) { return false; }
 
-       /* Dermatologist dermatologist = _dermatologistRepository.findOneById(request.getItemId());
-        Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
-        List<DermatologistExamination> finalList = _deRepository.findAllByPharmacy_Id(pharmacy.getId());
-        Shift dermatologistShift = _shiftRepository.findOneByDermatologistId(dermatologist.getId());
-        List<Shift> allShifts = _shiftRepository.findAll();
-        for(Shift shift: allShifts){
-            if(shift.getId() == dermatologistShift.getId()){
-                allShifts.remove(shift);
+    @Override
+    public List<PharmacyResponse> getPharmaciesByDate(String dateExamination, String startExamination, String endExamination) {
+        LocalTime start = LocalTime.parse(startExamination);
+        LocalTime end = LocalTime.parse(endExamination);
+        LocalDate date = LocalDate.parse(dateExamination);
+
+        List<Pharmacy> pharmacies = new ArrayList<>();
+        List<Pharmacy> finalPharmacies = new ArrayList<>();
+
+        List<ShiftPharmacist> shiftPharmacists = _spRepository.findAll();
+        List<ShiftPharmacist> list = new ArrayList<>();
+
+        List<PharmacistExamination> pharmacistExaminations = _peRepository.findAll();
+        List<PharmacistExamination> newList = new ArrayList<>();
+        List<PharmacistExamination> finalList = new ArrayList<>();
+
+
+        //uzeli smo sve smene koje  postoje
+        for(ShiftPharmacist shiftPharmacist: shiftPharmacists){
+            if(shiftPharmacist.getStartShift().isBefore(start)){
+                if(shiftPharmacist.getEndShift().isAfter(end)){
+                    list.add(shiftPharmacist);
+                    System.out.println("Pocetak smene:");
+                    System.out.println(shiftPharmacist.getStartShift());
+                    System.out.println("Je pre pocetka upita");
+                    System.out.println(start);
+                    System.out.println("Kraj smene:");
+                    System.out.println(shiftPharmacist.getEndShift());
+                    System.out.println("Je posle kraja upita");
+
+
+                    System.out.println("Ovo je smena koja odgovara ovom zahtevu i ubacujem je u listu:");
+                    System.out.println(shiftPharmacist.getId());
+                    //System.out.println(shiftPharmacist.getPharmacy().getId());
+                    //System.out.println("ovo gore su apoteke koje mogu imati slobodan termin");
+                    //System.out.println(shiftPharmacist.getId());
+                    System.out.println("Ovo je apoteka koja odgovara i ubacujem je");
+                    System.out.println(shiftPharmacist.getPharmacy().getName());
+                    pharmacies.add(shiftPharmacist.getPharmacy());
+                }else if(shiftPharmacist.getEndShift().equals(end)){
+                    list.add(shiftPharmacist);
+                    pharmacies.add(shiftPharmacist.getPharmacy());
+                }
+            }else if(shiftPharmacist.getStartShift().equals(start)){
+                list.add(shiftPharmacist);
+                pharmacies.add(shiftPharmacist.getPharmacy());
             }
-        }*/
-       /* for (DermatologistExamination de: finalList) {
-            System.out.println(de.getId());
-            System.out.println("Id");
+        }
 
-            if(de.getDermatologist().getId() == dermatologist.getId()){
-                if(de.getPharmacy().getId() == pharmacy.getId()){
-                    if(de.getExaminationStatus() == ExaminationStatus.RESERVED){
-                        return false;
-                    }else if(de.getExaminationStatus() == ExaminationStatus.AVAILABLE){
-                        finalList.remove(de);
-                        System.out.println(de.getId());
+        for(ShiftPharmacist shiftPharmacist: list){
+            for(PharmacistExamination pharmacistExamination: pharmacistExaminations){
+                if(shiftPharmacist == pharmacistExamination.getShiftPharmacist()){
+                    if(!newList.contains(pharmacistExamination)){
+                        newList.add(pharmacistExamination);
+                        System.out.println("Ovaj pregled je u redu i ubacujem ga u nasu narednu listu:");
+                        System.out.println(pharmacistExamination.getId());
+
                     }
+
                 }
             }
-        }*/
-        //System.out.println("Trebam izbaciti");
-        //pharmacy.setDermatologistsExaminations(finalList);
-       // pharmacy.set
-       // pharmacy.setDermatologistShifts(allShifts);
-       // _pharmacyRepository.save(pharmacy);
-        return true;
+        }
+
+        for(PharmacistExamination pharmacistExamination: newList){
+            System.out.println("Prolazim kroz pregled farmaceuta broj:");
+            System.out.println(pharmacistExamination.getId());
+            System.out.println("Uporedjujem njegov datum: ");
+            System.out.println(pharmacistExamination.getDateExamination());
+            System.out.println("I ovaj poslat");
+            System.out.println(date);
+            if(pharmacistExamination.getDateExamination().equals(date)){
+                System.out.println("Isti sam dan");
+                if(start.isBefore(pharmacistExamination.getStartTimeExamination())){
+                    if(end.isBefore(pharmacistExamination.getStartTimeExamination())){
+                        System.out.println("Pocetak i kraj nove su pre pocetka doktorove zakazane i to je ok");
+                        finalList.add(pharmacistExamination);
+                    }else{
+                        System.out.println("Preklapam seeeeeee");
+                        finalPharmacies.add(pharmacistExamination.getShiftPharmacist().getPharmacy());
+                        System.out.println("******************");
+                        System.out.println(pharmacistExamination.getShiftPharmacist().getPharmacy().getName());
+                    }
+                }else if(end.isAfter(pharmacistExamination.getEndTimeExamination())){
+                    System.out.println("Ovde je posle naseg zakazanog tako da je i to ok");
+                    finalList.add(pharmacistExamination);
+
+
+                }else{
+                    System.out.println("Preklapam seeeeeee");
+                    finalPharmacies.add(pharmacistExamination.getShiftPharmacist().getPharmacy());
+                    System.out.println("******************");
+                    System.out.println(pharmacistExamination.getShiftPharmacist().getPharmacy().getName());
+                }
+            }else{
+                System.out.println("nisam isti dan i hocu i ja da ucestvujem");
+                finalList.add(pharmacistExamination);
+            }
+        }
+        for(Pharmacy pharmacy:pharmacies){
+            System.out.println("Ova apoteka ima sansu");
+            System.out.println(pharmacy.getName());
+            for(Pharmacy pharmacy1: finalPharmacies){
+                System.out.println("Ovu uklanjamo");
+                System.out.println(pharmacy1.getName());
+                if(pharmacy.getId() == pharmacy1.getId()){
+                    pharmacies.remove(pharmacy);
+                }
+            }
+        }
+        //list su sve smene koje obuhvataju vreme koje je trazeno
+        return mapPharmacyListToPharmacyResponseList(pharmacies);
     }
+
 
     private SearchPharmacyResponse mapToSearchResponse(List<PharmacyResponse> pharmacyResponses) {
         SearchPharmacyResponse searchResponse = new SearchPharmacyResponse();
