@@ -1,9 +1,11 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.config.EmailContext;
+import com.example.isabackend.dto.request.AnswerComplaintRequest;
 import com.example.isabackend.entity.DermatologistExamination;
 import com.example.isabackend.entity.MedicamentReservation;
 import com.example.isabackend.entity.Patient;
+import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.services.IEmailService;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
@@ -12,9 +14,11 @@ import org.thymeleaf.context.Context;
 public class EmailService implements IEmailService {
 
     private final EmailContext _emailContext;
+    private final IPatientRepository _patientRepository;
 
-    public EmailService(EmailContext emailContext) {
+    public EmailService(EmailContext emailContext, IPatientRepository patientRepository) {
         _emailContext = emailContext;
+        _patientRepository = patientRepository;
     }
 
     @Override
@@ -55,5 +59,15 @@ public class EmailService implements IEmailService {
         Context context = new Context();
         context.setVariable("name", String.format("%s %s", savedReservation.getPatient().getFirstName(), savedReservation.getPatient().getLastName()));
         _emailContext.send(to, subject, "approveDermatologistExaminationReservation", context);
+    }
+
+    public void answerOnComplaint(AnswerComplaintRequest request) {
+        Patient patient = _patientRepository.findOneById(request.getPatientId());
+        String to = patient.getUser().getUsername();
+        String subject = "Answer on complaint";
+        Context context = new Context();
+        context.setVariable("name", String.format("%s %s", patient.getFirstName(), patient.getLastName()));
+        context.setVariable("text", String.format("%s",  request.getText()));
+        _emailContext.send(to, subject, "answerOnComplaint", context);
     }
 }

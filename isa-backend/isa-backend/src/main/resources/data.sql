@@ -189,3 +189,15 @@ insert into price_medicament(id, price, pharmacy_medicament_id, pricelist_id) va
 (36, 19, 11, 8),(37, 32, 12, 8),(38, 29, 13, 8),(39, 39, 14, 8),(40, 13, 15, 8),
 (41, 43, 11, 9),(42, 31, 12, 9),(43, 24, 13, 9),(44, 23, 14, 9),(45, 15, 15, 9),
 (46, 34, 11, 10),(47, 33, 12, 10),(48, 22, 13, 10),(49, 49, 14, 10),(50, 39, 15, 10);
+
+insert into complaint(id, text, pharmacy_id, dermatologist_id, pharmacist_id, patient_id, answered) values
+(1, 'Complaint on dermatologist', 1, 1, null, 1, false),
+(2, 'Complaint on dermatologist', 1, 1, null, 2, false),
+(3, 'Complaint on pharmacist', 1, null, 1, 1, false),
+(4, 'Complaint on pharmacist', 2, null, 2, 2, false),
+(5, 'Complaint on pharmacy', 1, null, null, 2, false),
+(6, 'Complaint on pharmacy', 2, null, null, 1, false),
+(7, 'Complaint on pharmacy', 1, null, null, 1, false),
+(8, 'Complaint on pharmacy', 3, null, null, 2, false),
+(9, 'Complaint on pharmacy', 4, null, null, 2, false),
+(10, 'Complaint on pharmacy', 1, null, null, 1, false);

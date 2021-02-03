@@ -147,7 +147,7 @@ public class PatientService implements IPatientService {
     }
 
 
-    private PatientResponse mapPatientToPatientResponse(Patient patient){
+    public PatientResponse mapPatientToPatientResponse(Patient patient){
         PatientResponse patientResponse = new PatientResponse();
         patientResponse.setId(patient.getId());
         patientResponse.setAddress(patient.getAddress());

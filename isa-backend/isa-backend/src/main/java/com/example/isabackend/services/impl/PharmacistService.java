@@ -78,7 +78,7 @@ public class PharmacistService implements IPharmacistService {
         return searchResponse;
     }
 
-    private List<PharmacistResponse> mapPharmacistsToPharmacistResponses(List<Pharmacist> pharmacists) {
+    public List<PharmacistResponse> mapPharmacistsToPharmacistResponses(List<Pharmacist> pharmacists) {
         List<PharmacistResponse> pharmacistResponses = new ArrayList<>();
         for(Pharmacist pharmacist: pharmacists){
             PharmacistResponse response = mapPharmacistToPharmacistResponse(pharmacist);
@@ -87,7 +87,7 @@ public class PharmacistService implements IPharmacistService {
         return pharmacistResponses;
     }
 
-    private PharmacistResponse mapPharmacistToPharmacistResponse(Pharmacist pharmacist) {
+    public PharmacistResponse mapPharmacistToPharmacistResponse(Pharmacist pharmacist) {
         PharmacistResponse pharmacistResponse = new PharmacistResponse();
         pharmacistResponse.setId(pharmacist.getId());
         pharmacistResponse.setAddress(pharmacist.getAddress());
