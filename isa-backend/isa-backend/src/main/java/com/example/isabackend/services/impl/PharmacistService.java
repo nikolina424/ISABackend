@@ -1,6 +1,7 @@
 package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.PharmacistRequest;
+import com.example.isabackend.dto.request.UpdatePharmacistRequest;
 import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IPharmacistRepository;
@@ -42,6 +43,32 @@ public class PharmacistService implements IPharmacistService {
             }
         }
         return pharmacyPharmacist;
+    }
+
+    @Override
+    public void updatePharmacist(Long id, UpdatePharmacistRequest request) {
+        Pharmacist pharmacist = _pharmacistRepository.findOneById(id);
+        if(request.getAddress() != null)
+            pharmacist.setAddress(request.getAddress());
+        if(request.getFirstName() != null)
+            pharmacist.setFirstName(request.getFirstName());
+        if(request.getLastName() != null)
+            pharmacist.setLastName(request.getLastName());
+        if(request.getNumber() != null)
+            pharmacist.setNumber(request.getNumber());
+
+
+        _pharmacistRepository.save(pharmacist);
+    }
+
+    @Override
+    public PharmacistResponse getPharmacist(Long id) {
+        Pharmacist pharmacist = _pharmacistRepository.findOneById(id);
+        if(pharmacist != null) {
+            return mapPharmacistToPharmacistResponse(pharmacist);
+        } else {
+            return null;
+        }
     }
 
 

@@ -2,7 +2,9 @@ package com.example.isabackend.controller;
 
 import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.UpdatePharmacistRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
+import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.PharmacistResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.services.IPharmacistService;
@@ -37,5 +39,22 @@ public class PharmacistController {
         else {
             return new ResponseEntity<>("Pharmacists in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPharmacist(@PathVariable("id") Long id){
+        PharmacistResponse response = _pharmacistService.getPharmacist(id);
+        if(response != null) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Pharmacist doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public void updatePharmacist(@PathVariable("id")Long id, @RequestBody UpdatePharmacistRequest request){
+        _pharmacistService.updatePharmacist(id, request);
+
     }
 }

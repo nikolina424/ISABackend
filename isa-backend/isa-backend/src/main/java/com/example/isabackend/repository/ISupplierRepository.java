@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ISupplierRepository extends JpaRepository<Supplier, Long> {
+    Supplier findOneById(Long id);
 }

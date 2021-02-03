@@ -9,7 +9,9 @@ insert into authorities_permissions (authority_id, permission_id) values
 (2, 2),
 (3, 1), (3, 5),
 (4, 5),
-(5, 5);
+(5, 5),
+(6, 1);
+
 
 -- password-> Admin123!!!
 
@@ -33,11 +35,15 @@ insert into user_entity (id, username, password, has_signed_in, last_password_re
 (17, 'dermatologist2@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 1),
 (18, 'dermatologist3@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 1),
 (19, 'dermatologist4@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 1),
-(20, 'dermatologist5@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 1);
+(20, 'dermatologist5@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 1),
+(21, 'supplier1@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 5),
+(22, 'supplier2@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 5),
+(23, 'supplier3@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 5),
+(24, 'supplier4@gmail.com', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', false, '2020-01-01 10:10:15', 5);
 
 insert into user_authority (user_id, authority_id) values
 (1, 5), (2, 4), (3, 3), (4, 3), (5, 1), (6, 2), (7, 4),(8, 2),(9, 2), (10, 2),
-(11, 2) , (12, 5), (13, 5), (14, 5), (15, 5), (16, 5),(17, 4),(18, 4), (19, 4), (20, 4);
+(11, 2) , (12, 5), (13, 5), (14, 5), (15, 5), (16, 5),(17, 4),(18, 4), (19, 4), (20, 4), (21, 6),(22, 6),(23, 6),(24, 6);
 
 
 insert into medicament(id, name, type, contraindications,ingredients,code, shape, replacement, manufacturer, issuance, notes ) values
@@ -75,11 +81,11 @@ insert into pharmacy_admin (id, first_name, last_name, user_id, pharmacy_id) val
 
 insert into pharmacist (id, first_name, last_name, user_id, number, address, pharmacy_id) values
 (1, 'Dusan', 'Sisarica', 1, '543443435', 'Marka Kraljevica 28', 1),
-(2, 'Jovana', 'Bajic', 1, '435435435', 'Panonska 54', 1),
-(3, 'Nemanja', 'Djogic', 1, '123456789', 'Marsala Tita 234', 2),
-(4, 'Strahinja', 'Rodic', 1, '423424', 'Partizanska 128', 2),
-(5, 'Bojana', 'Kelic', 1, '6543224', 'Temerinska 32', 3),
-(6, 'Milena', 'Babic', 1, '32523334', 'Maksima Gorkog 55', 4);
+(2, 'Jovana', 'Bajic', 12, '435435435', 'Panonska 54', 1),
+(3, 'Nemanja', 'Djogic', 13, '123456789', 'Marsala Tita 234', 2),
+(4, 'Strahinja', 'Rodic', 14, '423424', 'Partizanska 128', 2),
+(5, 'Bojana', 'Kelic', 15, '6543224', 'Temerinska 32', 3),
+(6, 'Milena', 'Babic', 16, '32523334', 'Maksima Gorkog 55', 4);
 
 insert into dermatologist (id, first_name, last_name, user_id, number, address) values
 (1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128'),
@@ -88,6 +94,12 @@ insert into dermatologist (id, first_name, last_name, user_id, number, address) 
 (4, 'Momcilo', 'Stankovic', 18, '5444', 'Vojvodjanska 22'),
 (5, 'Biljana', 'Jojic', 19, '38392543', 'Vuka Karadzica 44'),
 (6, 'Tamara', 'Stupar', 20, '932749', 'Slavska 94');
+
+insert into supplier (id, first_name, last_name, user_id, number, address) values
+(1, 'Vladimir', 'Sec', 21, '5433443435', 'Marka Kraljevica 28'),
+(2, 'Katarina', 'Maksimovic', 22, '43243232', 'Panonska 54'),
+(3, 'Srdjan', 'Jovanovic', 23, '123453216789', 'Marsala Tita 234'),
+(4, 'Kristina', 'Rodic', 24, '423422324', 'Partizanska 128');
 
 insert into patient (id, first_name, last_name, user_id, number, address, city, country, request_status, deleted) values
 (1, 'Zorana', 'Vlaskalic', 3, '43242324', 'Majevicka 8','Novi Sad','Srbija', 'CONFIRMED',false),

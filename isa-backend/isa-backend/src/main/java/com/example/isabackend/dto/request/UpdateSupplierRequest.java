@@ -1,5 +1,4 @@
-package com.example.isabackend.controller;
-
+package com.example.isabackend.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,12 +6,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SupplierRequest {
-    private String username;
-    private String password;
-    private String rePassword;
+public class UpdateSupplierRequest {
     private String firstName;
     private String lastName;
-    private String number;
     private String address;
+    private String number;
 }

@@ -1,10 +1,12 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.UpdateDermatologistRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
 import com.example.isabackend.dto.response.PharmacyResponse;
 import com.example.isabackend.dto.response.SearchDermatologistResponse;
 import com.example.isabackend.dto.response.ShiftResponse;
 import com.example.isabackend.entity.Dermatologist;
+import com.example.isabackend.entity.Patient;
 import com.example.isabackend.entity.Rating;
 import com.example.isabackend.repository.IDermatologistRepository;
 import com.example.isabackend.repository.IPharmacyRepository;
@@ -47,6 +49,7 @@ public class DermatologistService implements IDermatologistService {
         dermatologistResponse.setLastName(dermatologist.getLastName());
         dermatologistResponse.setUsername(dermatologist.getUser().getUsername());
         dermatologistResponse.setNumber(dermatologist.getNumber());
+        dermatologistResponse.setUserRole(dermatologist.getUser().getUserRole().toString());
         List<ShiftResponse> myShifts = new ArrayList<>();
         List<PharmacyResponse> myPharmacies = new ArrayList<>();
         List<PharmacyResponse> allPharmacies = _pharmacyService.getAllPharmacies();
@@ -113,6 +116,22 @@ public class DermatologistService implements IDermatologistService {
         List<Dermatologist> filteredDermatologists = filteredDermatologists(firstName, lastName);
         List<DermatologistResponse> dermatologistResponses =  mapDermatologistsToDermatologistsResponses(filteredDermatologists);
         return mapToSearchResponse(dermatologistResponses);
+    }
+
+    @Override
+    public void updateDermatologist(Long id, UpdateDermatologistRequest request) {
+        Dermatologist dermatologist = _dermatologistRepository.findOneById(id);
+        if(request.getAddress() != null)
+            dermatologist.setAddress(request.getAddress());
+        if(request.getFirstName() != null)
+            dermatologist.setFirstName(request.getFirstName());
+        if(request.getLastName() != null)
+            dermatologist.setLastName(request.getLastName());
+        if(request.getNumber() != null)
+            dermatologist.setNumber(request.getNumber());
+
+
+        _dermatologistRepository.save(dermatologist);
     }
 
     private SearchDermatologistResponse mapToSearchResponse(List<DermatologistResponse> dermatologistResponses) {

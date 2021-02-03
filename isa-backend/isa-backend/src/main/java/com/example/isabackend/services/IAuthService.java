@@ -1,7 +1,6 @@
 package com.example.isabackend.services;
 
 
-import com.example.isabackend.controller.SupplierRequest;
 import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.UserResponse;
 
@@ -25,4 +24,14 @@ public interface IAuthService {
     boolean registerDermatologist(DermatologistRequest request);
 
     boolean registerSupplier(SupplierRequest request);
+
+    void changePasswordForPatient(Long id, ChangePasswordRequest request);
+
+    void changePasswordForDermatologist(Long id, ChangePasswordRequest request);
+
+    void changePasswordForSupplier(Long id, ChangePasswordRequest request);
+
+    void changePasswordForPharmacist(Long id, ChangePasswordRequest request);
+
+    void changePasswordForSystemAdmin(Long id, ChangePasswordRequest request);
 }

@@ -1,6 +1,5 @@
 package com.example.isabackend.services.impl;
 
-import com.example.isabackend.controller.SupplierRequest;
 import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.PharmacyAdminResponse;
 import com.example.isabackend.dto.response.UserResponse;
@@ -25,29 +24,17 @@ import java.util.List;
 public class AuthService implements IAuthService {
 
     private final TokenUtils _tokenUtils;
-
     private final IUserRepository _userRepository;
-
     private final PasswordEncoder _passwordEncoder;
-
     private final IAuthorityRepository _authorityRepository;
-
     private final IPatientRepository _patientRepository;
-
     private final PharmacyAdminService _pharmacyAdminService;
-
     private final IPharmacistRepository _pharmacistRepository;
-
     private final IPharmacyRepository _pharmacyRepository;
-
     private final IShiftPharmacistRepository _shiftPharmacyRepository;
-
     private final IPharmacyAdminRepository _pharmacyAdminRepository;
-
     private final ISystemAdminRepository _systemAdminRepository;
-
     private final IDermatologistRepository _dermatologistRepository;
-
     private final ISupplierRepository _supplierRepository;
 
     public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository, IPharmacyAdminRepository pharmacyAdminRepository, ISystemAdminRepository systemAdminRepository, IDermatologistRepository dermatologistRepository, ISupplierRepository supplierRepository) {
@@ -80,7 +67,7 @@ public class AuthService implements IAuthService {
     @Override
     public UserResponse login(LoginRequest request) {
         User user = _userRepository.findOneByUsername(request.getUsername());
-
+        System.out.println(user.getUsername());
         if(user == null || !_passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
         }
@@ -322,6 +309,81 @@ public class AuthService implements IAuthService {
         return true;
     }
 
+    @Override
+    public void changePasswordForPatient(Long id, ChangePasswordRequest request) {
+        Patient patient = _patientRepository.findOneById(id);
+        User user = patient.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            if(request.getRePassword().equals(request.getPassword())){
+                user.setPassword(_passwordEncoder.encode(request.getPassword()));
+                Patient savedPatient = _patientRepository.save(patient);
+                user.setPatient(savedPatient);
+                _userRepository.save(user);
+
+            }
+        }
+    }
+
+    @Override
+    public void changePasswordForDermatologist(Long id, ChangePasswordRequest request) {
+        Dermatologist dermatologist = _dermatologistRepository.findOneById(id);
+        User user = dermatologist.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            if(request.getRePassword().equals(request.getPassword())){
+                user.setPassword(_passwordEncoder.encode(request.getPassword()));
+                Dermatologist savedDermatologist = _dermatologistRepository.save(dermatologist);
+                user.setDermatologist(savedDermatologist);
+                _userRepository.save(user);
+
+            }
+        }
+    }
+
+    @Override
+    public void changePasswordForSupplier(Long id, ChangePasswordRequest request) {
+        Supplier supplier = _supplierRepository.findOneById(id);
+        User user = supplier.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            if(request.getRePassword().equals(request.getPassword())){
+                user.setPassword(_passwordEncoder.encode(request.getPassword()));
+                Supplier savedSupplier = _supplierRepository.save(supplier);
+                user.setSupplier(savedSupplier);
+                _userRepository.save(user);
+
+            }
+        }
+    }
+
+    @Override
+    public void changePasswordForPharmacist(Long id, ChangePasswordRequest request) {
+        Pharmacist pharmacist = _pharmacistRepository.findOneById(id);
+        User user = pharmacist.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            if(request.getRePassword().equals(request.getPassword())){
+                user.setPassword(_passwordEncoder.encode(request.getPassword()));
+                Pharmacist savedPharmacist = _pharmacistRepository.save(pharmacist);
+                user.setPharmacist(savedPharmacist);
+                _userRepository.save(user);
+
+            }
+        }
+    }
+
+    @Override
+    public void changePasswordForSystemAdmin(Long id, ChangePasswordRequest request) {
+        SystemAdmin systemAdmin = _systemAdminRepository.findOneById(id);
+        User user = systemAdmin.getUser();
+        if(_passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            if(request.getRePassword().equals(request.getPassword())){
+                user.setPassword(_passwordEncoder.encode(request.getPassword()));
+                SystemAdmin savedAdmin = _systemAdminRepository.save(systemAdmin);
+                user.setSystemAdmin(savedAdmin);
+                _userRepository.save(user);
+
+            }
+        }
+    }
+
 
     private UserResponse mapUserToUserResponse(User user) {
         UserResponse userResponse = new UserResponse();
@@ -335,6 +397,12 @@ public class AuthService implements IAuthService {
             userResponse.setId(user.getSystemAdmin().getId());
         }else if(user.getPharmacyAdmin() != null){
             userResponse.setId(user.getPharmacyAdmin().getId());
+        }else if(user.getSupplier() != null){
+            System.out.println("Ja sam simple user");
+            System.out.println(user.getSupplier().getId());
+            System.out.println("Ovo je moj id");
+            userResponse.setId(user.getSupplier().getId());
+            System.out.println(userResponse.getId());
         }
         userResponse.setUsername(user.getUsername());
         if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_PATIENT"))){
@@ -350,6 +418,8 @@ public class AuthService implements IAuthService {
             userResponse.setUserRole("PHARMACY_ADMIN");
             PharmacyAdminResponse pharmacyAdminResponse = _pharmacyAdminService.getPharmacyAdminByUserId(user.getId());
             userResponse.setPharmacyId(pharmacyAdminResponse.getPharmacyId());
+        }else if(user.getRoles().contains(_authorityRepository.findOneByName("ROLE_SUPPLIER"))){
+            userResponse.setUserRole("SUPPLIER");
         }
         return userResponse;
     }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ISystemAdminRepository extends JpaRepository<SystemAdmin, Long> {
+    SystemAdmin findOneById(Long id);
 }

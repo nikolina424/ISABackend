@@ -105,10 +105,38 @@ public class AuthController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/pharmacy-admin")
     public void changePasswordForPharmacyAdmin(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
         _authService.changePasswordForPharmacyAdmin(id, request);
 
+    }
+
+    @PutMapping("/{id}/patient")
+    public void changePasswordForPatient(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForPatient(id, request);
+
+    }
+
+    @PutMapping("/{id}/dermatologist")
+    public void changePasswordForDermatologist(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForDermatologist(id, request);
+
+    }
+
+    @PutMapping("/{id}/pharmacist")
+    public void changePasswordForPharmacist(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForPharmacist(id, request);
+
+    }
+
+    @PutMapping("/{id}/supplier")
+    public void changePasswordForSupplier(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForSupplier(id, request);
+    }
+
+    @PutMapping("/{id}/system-admin")
+    public void changePasswordForSystemAdmin(@PathVariable("id")Long id, @RequestBody ChangePasswordRequest request){
+        _authService.changePasswordForSystemAdmin(id, request);
     }
 
 

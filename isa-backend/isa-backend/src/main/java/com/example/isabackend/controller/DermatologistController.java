@@ -1,6 +1,8 @@
 package com.example.isabackend.controller;
 
 import com.example.isabackend.dto.request.ShiftRequest;
+import com.example.isabackend.dto.request.UpdateDermatologistRequest;
+import com.example.isabackend.dto.request.UpdatePharmacyAdminRequest;
 import com.example.isabackend.dto.response.DermatologistResponse;
 import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
@@ -52,6 +54,12 @@ public class DermatologistController {
     @GetMapping("/search")
     public ResponseEntity<?> searchDermatologists(@RequestParam("firstName") String firstName, @RequestParam(value="lastName") String lastName){
         return new ResponseEntity<>(_dermatologistService.searchDermatologists(firstName, lastName), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public void updateDermatologist(@PathVariable("id")Long id, @RequestBody UpdateDermatologistRequest request){
+        _dermatologistService.updateDermatologist(id, request);
+
     }
 
 

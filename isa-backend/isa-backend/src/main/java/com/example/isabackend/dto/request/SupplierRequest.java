@@ -1,25 +1,19 @@
-package com.example.isabackend.dto.response;
+package com.example.isabackend.dto.request;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DermatologistResponse {
-
-    private Long id;
+public class SupplierRequest {
     private String username;
+    private String password;
+    private String rePassword;
     private String firstName;
     private String lastName;
     private String number;
     private String address;
-    private List<PharmacyResponse> pharmacyResponses;
-    private float rating;
-    private String userRole;
-
-
 }
