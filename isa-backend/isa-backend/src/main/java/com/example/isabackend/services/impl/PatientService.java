@@ -7,9 +7,11 @@ import com.example.isabackend.dto.response.MedicamentResponse;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.entity.Medicament;
 import com.example.isabackend.entity.Patient;
+import com.example.isabackend.entity.Pharmacy;
 import com.example.isabackend.entity.User;
 import com.example.isabackend.repository.IMedicamentRepository;
 import com.example.isabackend.repository.IPatientRepository;
+import com.example.isabackend.repository.IPharmacyRepository;
 import com.example.isabackend.repository.IUserRepository;
 import com.example.isabackend.services.IEmailService;
 import com.example.isabackend.services.IPatientService;
@@ -26,13 +28,15 @@ public class PatientService implements IPatientService {
     private final IEmailService _emailService;
     private final IMedicamentRepository _medicamentRepository;
     private final MedicamentService _medicamentService;
+    private final IPharmacyRepository _pharmacyRepository;
 
-    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository, IEmailService emailService, IMedicamentRepository medicamentRepository, MedicamentService medicamentService) {
+    public PatientService(IPatientRepository patientRepository, IUserRepository userRepository, IEmailService emailService, IMedicamentRepository medicamentRepository, MedicamentService medicamentService, IPharmacyRepository pharmacyRepository) {
         _patientRepository = patientRepository;
         _userRepository = userRepository;
         _emailService = emailService;
         _medicamentRepository = medicamentRepository;
         _medicamentService = medicamentService;
+        _pharmacyRepository = pharmacyRepository;
     }
 
     @Override
@@ -144,6 +148,11 @@ public class PatientService implements IPatientService {
         }
         List<MedicamentResponse> m = _medicamentService.mapMedicamentListToMedicamentResponseList(availableMedicaments);
         return m;
+    }
+
+    public List<Patient> getAllSubscribedPatient(Long id){
+        Pharmacy pharmacy = _pharmacyRepository.findOneById(id);
+        return pharmacy.getPatients();
     }
 
 

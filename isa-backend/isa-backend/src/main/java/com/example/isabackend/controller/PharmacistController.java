@@ -1,5 +1,6 @@
 package com.example.isabackend.controller;
 
+import com.example.isabackend.dto.request.ChangePricelistRequest;
 import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.request.UpdatePharmacistRequest;
@@ -67,6 +68,12 @@ public class PharmacistController {
     @PutMapping("/{id}")
     public void updatePharmacist(@PathVariable("id")Long id, @RequestBody UpdatePharmacistRequest request){
         _pharmacistService.updatePharmacist(id, request);
+
+    }
+
+    @PutMapping("")
+    public void changePricelist(@RequestBody ChangePricelistRequest request){
+        _pharmacistService.changePricelist(request);
 
     }
 }

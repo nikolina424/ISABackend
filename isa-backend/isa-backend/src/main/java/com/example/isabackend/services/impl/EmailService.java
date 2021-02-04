@@ -70,4 +70,13 @@ public class EmailService implements IEmailService {
         context.setVariable("text", String.format("%s",  request.getText()));
         _emailContext.send(to, subject, "answerOnComplaint", context);
     }
+
+    public void sendPromotion(Patient patient, String description) {
+        String to = patient.getUser().getUsername();
+        String subject = "New promotion";
+        Context context = new Context();
+        context.setVariable("name", String.format("%s %s", patient.getFirstName(), patient.getLastName()));
+        context.setVariable("text", String.format("%s",  description));
+        _emailContext.send(to, subject, "sendPromotion", context);
+    }
 }

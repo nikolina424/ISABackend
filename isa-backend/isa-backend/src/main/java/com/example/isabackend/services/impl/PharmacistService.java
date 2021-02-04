@@ -1,10 +1,12 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.ChangePricelistRequest;
 import com.example.isabackend.dto.request.UpdatePharmacistRequest;
 import com.example.isabackend.dto.response.*;
 import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.IPharmacistExaminationRepository;
 import com.example.isabackend.repository.IPharmacistRepository;
+import com.example.isabackend.repository.IPricelistRepository;
 import com.example.isabackend.repository.IShiftPharmacistRepository;
 import com.example.isabackend.services.IPharmacistService;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,15 @@ public class PharmacistService implements IPharmacistService {
     private final IPharmacistRepository _pharmacistRepository;
     private final IShiftPharmacistRepository _spRepository;
     private final IPharmacistExaminationRepository _peRepository;
+    private final PricelistService _pricelistService;
+    private final IPricelistRepository _pricelistRepository;
 
-    public PharmacistService(IPharmacistRepository pharmacistRepository, IShiftPharmacistRepository spRepository, IPharmacistExaminationRepository peRepository) {
+    public PharmacistService(IPharmacistRepository pharmacistRepository, IShiftPharmacistRepository spRepository, IPharmacistExaminationRepository peRepository, PricelistService pricelistService, IPricelistRepository pricelistRepository) {
         _pharmacistRepository = pharmacistRepository;
         _spRepository = spRepository;
         _peRepository = peRepository;
+        _pricelistService = pricelistService;
+        _pricelistRepository = pricelistRepository;
     }
 
     @Override
@@ -172,6 +178,14 @@ public class PharmacistService implements IPharmacistService {
         return mapPharmacistsToPharmacistResponses(ff);
     }
 
+    @Override
+    public void changePricelist(ChangePricelistRequest request) {
+       Pharmacist pharmacist = _pharmacistRepository.findOneById(request.getPharmacistId());
+       pharmacist.setPrice(request.getPrice());
+       pharmacist.setPricelist(_pricelistRepository.findOneById(request.getPricelistId()));
+       _pharmacistRepository.save(pharmacist);
+    }
+
 
     private SearchPharmacistResponse mapToSearchResponse(List<PharmacistResponse> pharmacistResponses) {
         SearchPharmacistResponse searchResponse = new SearchPharmacistResponse();
@@ -196,6 +210,8 @@ public class PharmacistService implements IPharmacistService {
         pharmacistResponse.setLastName(pharmacist.getLastName());
         pharmacistResponse.setUsername(pharmacist.getUser().getUsername());
         pharmacistResponse.setNumber(pharmacist.getNumber());
+        pharmacistResponse.setPrice(pharmacist.getPrice());
+        pharmacistResponse.setPricelistResponse(_pricelistService.mapPricelistToPricelistResponse( pharmacist.getPricelist()));
 
         float average = 0;
         float sum = 0;

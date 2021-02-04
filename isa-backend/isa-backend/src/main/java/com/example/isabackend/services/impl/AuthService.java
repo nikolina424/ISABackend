@@ -36,8 +36,9 @@ public class AuthService implements IAuthService {
     private final ISystemAdminRepository _systemAdminRepository;
     private final IDermatologistRepository _dermatologistRepository;
     private final ISupplierRepository _supplierRepository;
+    private final IPricelistRepository _pricelistRepository;
 
-    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository, IPharmacyAdminRepository pharmacyAdminRepository, ISystemAdminRepository systemAdminRepository, IDermatologistRepository dermatologistRepository, ISupplierRepository supplierRepository) {
+    public AuthService(TokenUtils tokenUtils, IUserRepository userRepository, PasswordEncoder passwordEncoder, IAuthorityRepository authorityRepository, IPatientRepository patientRepository, PharmacyAdminService pharmacyAdminService, IPharmacistRepository pharmacistRepository, IPharmacyRepository pharmacyRepository, IShiftPharmacistRepository shiftPharmacyRepository, IPharmacyAdminRepository pharmacyAdminRepository, ISystemAdminRepository systemAdminRepository, IDermatologistRepository dermatologistRepository, ISupplierRepository supplierRepository, IPricelistRepository pricelistRepository) {
         _tokenUtils = tokenUtils;
         _userRepository = userRepository;
         _passwordEncoder = passwordEncoder;
@@ -51,6 +52,7 @@ public class AuthService implements IAuthService {
         _systemAdminRepository = systemAdminRepository;
         _dermatologistRepository = dermatologistRepository;
         _supplierRepository = supplierRepository;
+        _pricelistRepository = pricelistRepository;
     }
 
     @Override
@@ -145,6 +147,16 @@ public class AuthService implements IAuthService {
         pharmacist.setLastName(request.getLastName());
         pharmacist.setNumber(request.getNumber());
         pharmacist.setAddress(request.getAddress());
+        pharmacist.setPrice(request.getPrice());
+        List<Pricelist> pricelists = _pricelistRepository.getAllByPharmacyId(request.getPharmacyId());
+        Pricelist pricelist = new Pricelist();
+        for(Pricelist p: pricelists){
+            if(p.getActive()){
+                pricelist = p;
+            }
+        }
+        pharmacist.setPricelist(pricelist);
+
         Pharmacy pharmacy = _pharmacyRepository.findOneById(request.getPharmacyId());
         pharmacist.setPharmacy(pharmacy);
 

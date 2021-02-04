@@ -27,6 +27,7 @@ public class Pharmacy {
     @Column(name = "about")
     private String about;
 
+
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PharmacyAdmin> pharmacyAdmins;
 
@@ -48,4 +49,10 @@ public class Pharmacy {
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Complaint> complaints;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "pharmacy_promotions_patients",
+            joinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"))
+    private List<Patient> patients;
 }

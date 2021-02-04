@@ -41,4 +41,10 @@ public class Pharmacist {
 
     @OneToMany(mappedBy = "pharmacist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Complaint> complaints;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pricelist_id")
+    private Pricelist pricelist;
+
+    private double price;
 }

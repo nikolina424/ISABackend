@@ -8,7 +8,6 @@ import com.example.isabackend.entity.*;
 import com.example.isabackend.repository.*;
 import com.example.isabackend.services.IPharmacyService;
 import com.example.isabackend.util.enums.MedicamentReservationStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,8 +28,9 @@ public class PharmacyService implements IPharmacyService {
     private final ShiftService _shiftService;
     private final IShiftPharmacistRepository _spRepository;
     private final IPharmacistExaminationRepository _peRepository;
+    private final IPatientRepository _patientRepository;
 
-    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository, IMedicamentReservationRepository mrRepository, IDermatologistRepository dermatologistRepository, IDermatologistExaminationRepository deRepository, IShiftRepository shiftRepository, ShiftService shiftService, IShiftPharmacistRepository spRepository, IPharmacistExaminationRepository peRepository) {
+    public PharmacyService(IPharmacyRepository pharmacyRepository, IMedicamentRepository medicamentRepository, IPharmacyMedicamentRepository phRepository, IMedicamentReservationRepository mrRepository, IDermatologistRepository dermatologistRepository, IDermatologistExaminationRepository deRepository, IShiftRepository shiftRepository, ShiftService shiftService, IShiftPharmacistRepository spRepository, IPharmacistExaminationRepository peRepository, IPatientRepository patientRepository) {
         _pharmacyRepository = pharmacyRepository;
         _medicamentRepository = medicamentRepository;
         _phRepository = phRepository;
@@ -41,6 +41,7 @@ public class PharmacyService implements IPharmacyService {
         _shiftService = shiftService;
         _spRepository = spRepository;
         _peRepository = peRepository;
+        _patientRepository = patientRepository;
     }
 
     @Override
@@ -236,6 +237,18 @@ public class PharmacyService implements IPharmacyService {
         //list su sve smene koje obuhvataju vreme koje je trazeno
         return mapPharmacyListToPharmacyResponseList(p);
     }
+
+    @Override
+    public List<PharmacyResponse> getAllBySubPatientId(Long id) {
+        Patient patient = _patientRepository.findOneById(id);
+        List<Pharmacy> pharmacies = _pharmacyRepository.findAll();
+        List<Pharmacy> finalPharmacies = new ArrayList<>();
+        for(Pharmacy p: pharmacies){
+            if(p.getPatients().contains(patient)){
+                finalPharmacies.add(p);
+            }
+        }
+        return mapPharmacyListToPharmacyResponseList(finalPharmacies);    }
 
 
     private SearchPharmacyResponse mapToSearchResponse(List<PharmacyResponse> pharmacyResponses) {

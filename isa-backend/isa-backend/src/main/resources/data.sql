@@ -79,13 +79,26 @@ insert into pharmacy_admin (id, first_name, last_name, user_id, pharmacy_id) val
 (4, 'Pavle', 'Ivic', 10, 3),
 (5, 'Anja', 'Vlaskalic', 11, 4);
 
-insert into pharmacist (id, first_name, last_name, user_id, number, address, pharmacy_id) values
-(1, 'Dusan', 'Sisarica', 1, '543443435', 'Marka Kraljevica 28', 1),
-(2, 'Jovana', 'Bajic', 12, '435435435', 'Panonska 54', 2),
-(3, 'Nemanja', 'Djogic', 13, '123456789', 'Marsala Tita 234', 3),
-(4, 'Strahinja', 'Rodic', 14, '423424', 'Partizanska 128', 4),
-(5, 'Bojana', 'Kelic', 15, '6543224', 'Temerinska 32', 1),
-(6, 'Milena', 'Babic', 16, '32523334', 'Maksima Gorkog 55', 2);
+insert into pricelist(id, active, from_date, to_date, pharmacy_id ) values
+(1, false, '2020-10-01', '2020-11-01', 1 ),
+(2, false, '2020-11-01', '2020-12-01', 1 ),
+(3, true, '2020-12-01', '2021-03-01', 1 ),
+(4, false, '2020-10-01', '2020-11-01', 2 ),
+(5, false, '2020-11-01', '2020-12-01', 2 ),
+(6, true, '2020-12-01', '2021-03-01', 2 ),
+(7, false, '2020-10-01', '2020-11-01', 3 ),
+(8, false, '2020-11-01', '2020-12-01', 3 ),
+(9, false, '2020-12-01', '2021-01-01', 3 ),
+(10, true, '2021-01-01', '2021-03-01', 3 ),
+(11, true, '2021-01-01', '2021-03-01', 4 );
+
+insert into pharmacist (id, first_name, last_name, user_id, number, address, pharmacy_id,pricelist_id, price) values
+(1, 'Dusan', 'Sisarica', 1, '543443435', 'Marka Kraljevica 28', 1, 3, 10),
+(2, 'Jovana', 'Bajic', 12, '435435435', 'Panonska 54', 2, 6, 15),
+(3, 'Nemanja', 'Djogic', 13, '123456789', 'Marsala Tita 234', 3, 10, 13),
+(4, 'Strahinja', 'Rodic', 14, '423424', 'Partizanska 128', 4, 11, 17),
+(5, 'Bojana', 'Kelic', 15, '6543224', 'Temerinska 32', 1, 3, 15),
+(6, 'Milena', 'Babic', 16, '32523334', 'Maksima Gorkog 55', 2, 6, 20);
 
 insert into dermatologist (id, first_name, last_name, user_id, number, address) values
 (1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128'),
@@ -166,17 +179,7 @@ insert into rating(id,patient_id, grade, pharmacy_id, dermatologist_id, pharmaci
 (11, 1, 4, 3, null, null, null),
 (12, 1, 3, null, null, null, 3);
 
-insert into pricelist(id, active, from_date, to_date, pharmacy_id ) values
-(1, false, '2020-10-01', '2020-11-01', 1 ),
-(2, false, '2020-11-01', '2020-12-01', 1 ),
-(3, true, '2020-12-01', '2021-03-01', 1 ),
-(4, false, '2020-10-01', '2020-11-01', 2 ),
-(5, false, '2020-11-01', '2020-12-01', 2 ),
-(6, true, '2020-12-01', '2021-03-01', 2 ),
-(7, false, '2020-10-01', '2020-11-01', 3 ),
-(8, false, '2020-11-01', '2020-12-01', 3 ),
-(9, false, '2020-12-01', '2021-01-01', 3 ),
-(10, true, '2021-01-01', '2021-03-01', 3 );
+
 
 insert into price_medicament(id, price, pharmacy_medicament_id, pricelist_id) values
 (1, 10, 1, 1),(2, 11, 2, 1),(3, 9, 3, 1),(4, 15, 4, 1),(5, 20, 5, 1),
@@ -207,3 +210,14 @@ insert into pharmacist_examination(id, start_time_examination, end_time_examinat
 (4, '09:00', '10:00','2021-03-10', 1,2,1, 21),(5, '15:00', '16:00','2021-03-01', 5,2, 1, 54),(6,  '14:00', '15:00', '2021-10-18',6,2, 1, 23),
 (7, '08:00', '09:00','2020-03-10', 1,1,2, 21),(8, '11:00', '12:00','2020-03-11',  2,1,2, 19),(9,  '09:00', '10:00','2020-03-12', 3,1, 2, 33),
 (10, '09:00', '10:00','2020-03-10', 1,2,2, 55),(11, '15:00', '16:00','2020-03-01', 5,2,2, 15),(12,  '14:00', '15:00', '2020-10-18',6,2, 2, 22);
+
+insert into promotion(id, expire_date, active, pharmacy_id, description) values
+(1, '2021-03-10', true, 1, 'Prva promocija'),
+(2, '2021-03-10', true, 1, 'Druga promocija'),
+(3, '2021-03-10', true, 2, 'Treca promocija'),
+(4, '2021-03-10', true, 2, 'Cetvrta promocija'),
+(5, '2021-03-10', true, 3, 'Peta promocija'),
+(6, '2021-03-10', true, 4, 'Sesta promocija');
+
+insert into pharmacy_promotions_patients(pharmacy_id, patient_id) values
+(1, 1), (2, 1), (3, 1);

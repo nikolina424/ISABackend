@@ -28,4 +28,6 @@ public interface IPharmacyService {
     boolean removeDermatologist(RemoveFromPharmacyRequest request);
 
     List<PharmacyResponse> getPharmaciesByDate(String dateExamination, String startExamination, String endExamination);
+
+    List<PharmacyResponse> getAllBySubPatientId(Long id);
 }

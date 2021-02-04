@@ -1,5 +1,6 @@
 package com.example.isabackend.dto.response;
 
+import com.example.isabackend.entity.Pricelist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,7 @@ public class PharmacistResponse {
     private String number;
     private String address;
     private float rating;
+    private double price;
+    private PricelistResponse pricelistResponse;
 
 }

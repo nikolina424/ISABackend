@@ -67,6 +67,9 @@ public class PricelistService implements IPricelistService {
         pricelist.setToDate(toDate);
         pricelist.setPharmacy(pharmacy);
         _pricelistRepository.save(pricelist);
+
+
+
         return mapPricelistToPricelistResponse(pricelist);
     }
 

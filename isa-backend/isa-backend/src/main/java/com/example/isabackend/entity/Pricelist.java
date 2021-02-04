@@ -31,6 +31,9 @@ public class Pricelist {
     private Pharmacy pharmacy;
 
     @OneToMany(mappedBy = "pricelist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pharmacist> pharmacists;
+
+    @OneToMany(mappedBy = "pricelist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PriceMedicament> priceMedicaments;
 
     public boolean getActive() {

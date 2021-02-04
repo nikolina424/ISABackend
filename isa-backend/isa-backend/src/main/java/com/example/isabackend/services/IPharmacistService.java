@@ -1,5 +1,6 @@
 package com.example.isabackend.services;
 
+import com.example.isabackend.dto.request.ChangePricelistRequest;
 import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.UpdatePharmacistRequest;
 import com.example.isabackend.dto.response.PharmacistResponse;
@@ -17,4 +18,6 @@ public interface IPharmacistService {
     PharmacistResponse getPharmacist(Long id);
 
     List<PharmacistResponse> getPharmacistsDate(String dateExamination, String startExamination, String endExamination, Long pharmacyId);
+
+    void changePricelist(ChangePricelistRequest request);
 }

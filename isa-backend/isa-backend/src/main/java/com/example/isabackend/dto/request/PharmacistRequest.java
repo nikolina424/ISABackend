@@ -19,5 +19,6 @@ public class PharmacistRequest {
     private String startShift;
     private String endShift;
     private Long pharmacyId;
+    private double price;
 
 }

@@ -3,6 +3,7 @@ package com.example.isabackend.controller;
 import com.example.isabackend.dto.request.*;
 import com.example.isabackend.dto.response.PatientResponse;
 import com.example.isabackend.dto.response.PharmacyResponse;
+import com.example.isabackend.dto.response.PromotionResponse;
 import com.example.isabackend.dto.response.TempResponse;
 import com.example.isabackend.services.IPharmacyService;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,17 @@ public class PharmacyController {
     @GetMapping("/medicament/{id}")
     public ResponseEntity<?> getPharmaciesByMedicamentId(@PathVariable("id") Long id){
         List<PharmacyResponse> pharmacyResponses = _pharmacyService.getPharmaciesByMedicamentId(id);
+        if(pharmacyResponses != null) {
+            return new ResponseEntity<>(pharmacyResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Pharmacies doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/subscribed/{id}/patient")
+    public ResponseEntity<?> getAllBySubPatientId(@PathVariable("id") Long id){
+        List<PharmacyResponse> pharmacyResponses = _pharmacyService.getAllBySubPatientId(id);
         if(pharmacyResponses != null) {
             return new ResponseEntity<>(pharmacyResponses, HttpStatus.OK);
         }
