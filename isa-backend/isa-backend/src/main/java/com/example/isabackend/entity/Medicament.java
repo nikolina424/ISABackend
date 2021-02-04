@@ -59,6 +59,9 @@ public class Medicament {
     @OneToMany(mappedBy = "medicament", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings;
 
+    @OneToMany(mappedBy = "medicament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderMedicament> orderMedicaments;
+
 
 }
 
