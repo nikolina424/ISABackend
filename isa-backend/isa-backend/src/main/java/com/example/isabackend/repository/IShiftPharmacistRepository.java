@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IShiftPharmacistRepository extends JpaRepository<ShiftPharmacist, Long> {
+    ShiftPharmacist findOneByPharmacist_Id(Long pharmacistId);
 }

@@ -81,11 +81,11 @@ insert into pharmacy_admin (id, first_name, last_name, user_id, pharmacy_id) val
 
 insert into pharmacist (id, first_name, last_name, user_id, number, address, pharmacy_id) values
 (1, 'Dusan', 'Sisarica', 1, '543443435', 'Marka Kraljevica 28', 1),
-(2, 'Jovana', 'Bajic', 12, '435435435', 'Panonska 54', 1),
-(3, 'Nemanja', 'Djogic', 13, '123456789', 'Marsala Tita 234', 2),
-(4, 'Strahinja', 'Rodic', 14, '423424', 'Partizanska 128', 2),
-(5, 'Bojana', 'Kelic', 15, '6543224', 'Temerinska 32', 3),
-(6, 'Milena', 'Babic', 16, '32523334', 'Maksima Gorkog 55', 4);
+(2, 'Jovana', 'Bajic', 12, '435435435', 'Panonska 54', 2),
+(3, 'Nemanja', 'Djogic', 13, '123456789', 'Marsala Tita 234', 3),
+(4, 'Strahinja', 'Rodic', 14, '423424', 'Partizanska 128', 4),
+(5, 'Bojana', 'Kelic', 15, '6543224', 'Temerinska 32', 1),
+(6, 'Milena', 'Babic', 16, '32523334', 'Maksima Gorkog 55', 2);
 
 insert into dermatologist (id, first_name, last_name, user_id, number, address) values
 (1, 'Uros', 'Sisarica', 2, '3543', 'Novaka Pejcica 128'),

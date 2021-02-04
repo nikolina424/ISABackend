@@ -15,4 +15,6 @@ public interface IPharmacistService {
     void updatePharmacist(Long id, UpdatePharmacistRequest request);
 
     PharmacistResponse getPharmacist(Long id);
+
+    List<PharmacistResponse> getPharmacistsDate(String dateExamination, String startExamination, String endExamination, Long pharmacyId);
 }

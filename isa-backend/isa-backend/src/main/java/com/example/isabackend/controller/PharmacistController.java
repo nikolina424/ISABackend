@@ -3,10 +3,7 @@ package com.example.isabackend.controller;
 import com.example.isabackend.dto.request.PharmacistRequest;
 import com.example.isabackend.dto.request.ShiftRequest;
 import com.example.isabackend.dto.request.UpdatePharmacistRequest;
-import com.example.isabackend.dto.response.DermatologistResponse;
-import com.example.isabackend.dto.response.PatientResponse;
-import com.example.isabackend.dto.response.PharmacistResponse;
-import com.example.isabackend.dto.response.ShiftResponse;
+import com.example.isabackend.dto.response.*;
 import com.example.isabackend.services.IPharmacistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +37,21 @@ public class PharmacistController {
             return new ResponseEntity<>("Pharmacists in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/date")
+    public ResponseEntity<?> getPharmacistsDate(@RequestParam("dateExamination") String dateExamination,
+                                                 @RequestParam("startExamination") String startExamination,
+                                                 @RequestParam("endExamination") String endExamination,
+                                                 @RequestParam("pharmacyId") Long pharmacyId){
+        List<PharmacistResponse> pharmacistResponses = _pharmacistService.getPharmacistsDate(dateExamination,startExamination,endExamination , pharmacyId);
+        if(pharmacistResponses != null) {
+            return new ResponseEntity<>(pharmacistResponses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Pharmacists doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPharmacist(@PathVariable("id") Long id){

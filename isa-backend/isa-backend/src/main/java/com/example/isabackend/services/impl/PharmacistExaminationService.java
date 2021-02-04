@@ -1,15 +1,19 @@
 package com.example.isabackend.services.impl;
 
+import com.example.isabackend.dto.request.CreatePharmacistExaminationRequest;
 import com.example.isabackend.dto.request.GetIdRequest;
 import com.example.isabackend.dto.response.PharmacistExaminationResponse;
-import com.example.isabackend.entity.DermatologistExamination;
 import com.example.isabackend.entity.PharmacistExamination;
+import com.example.isabackend.entity.ShiftPharmacist;
+import com.example.isabackend.repository.IPatientRepository;
 import com.example.isabackend.repository.IPharmacistExaminationRepository;
+import com.example.isabackend.repository.IShiftPharmacistRepository;
 import com.example.isabackend.services.IPharmacistExaminationService;
 import com.example.isabackend.util.enums.ExaminationStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +21,14 @@ import java.util.List;
 public class PharmacistExaminationService implements IPharmacistExaminationService {
     private final IPharmacistExaminationRepository _peRepository;
     private final ShiftPharmacistService _spService;
+    private IPatientRepository _patientRepository;
+    private IShiftPharmacistRepository _spRepository;
 
-    public PharmacistExaminationService(IPharmacistExaminationRepository peRepository, ShiftPharmacistService spService) {
+    public PharmacistExaminationService(IPharmacistExaminationRepository peRepository, ShiftPharmacistService spService, IPatientRepository patientRepository, IShiftPharmacistRepository spRepository) {
         _peRepository = peRepository;
         _spService = spService;
+        _patientRepository = patientRepository;
+        _spRepository = spRepository;
     }
 
     @Override
@@ -61,6 +69,23 @@ public class PharmacistExaminationService implements IPharmacistExaminationServi
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PharmacistExaminationResponse createPharmacistExamination(CreatePharmacistExaminationRequest request) {
+        PharmacistExamination pharmacistExamination = new PharmacistExamination();
+        LocalTime start = LocalTime.parse(request.getStartExamination());
+        LocalTime end = LocalTime.parse(request.getEndExamination());
+        LocalDate date = LocalDate.parse(request.getDateExamination());
+        pharmacistExamination.setDateExamination(date);
+        pharmacistExamination.setStartTimeExamination(start);
+        pharmacistExamination.setEndTimeExamination(end);
+        pharmacistExamination.setExaminationStatus(ExaminationStatus.RESERVED);
+        pharmacistExamination.setPatient(_patientRepository.findOneById(request.getPatientId()));
+        ShiftPharmacist shiftPharmacist = _spRepository.findOneByPharmacist_Id(request.getPharmacistId());
+        pharmacistExamination.setShiftPharmacist(shiftPharmacist);
+        _peRepository.save(pharmacistExamination);
+        return mapExaminationToExaminationResponse(pharmacistExamination);
     }
 
     public List<PharmacistExaminationResponse> mapExaminationsToExaminationResponses(List<PharmacistExamination> all) {
