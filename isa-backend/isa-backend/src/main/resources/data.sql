@@ -222,11 +222,15 @@ insert into promotion(id, expire_date, active, pharmacy_id, description) values
 insert into pharmacy_promotions_patients(pharmacy_id, patient_id) values
 (1, 1), (2, 1), (3, 1);
 
-insert into purchase_order(id, pharmacy_id, limit_date, pharmacist_id, active) values
-(1, 1, '2020-03-10',1, false), (2, 2, '2020-03-10', 2, false), (3, 3, '2021-03-10', 3, true), (4, 4, '2021-03-10', 4, true);
+insert into purchase_order(id, pharmacy_id, limit_date, pharmacist_id, active, purchase_order_status) values
+(1, 1, '2020-03-10',1, false, 1), (2, 2, '2020-03-10', 2, false, 1), (3, 3, '2021-03-10', 3, true, 0), (4, 4, '2021-03-10', 4, true, 0);
 
 insert into order_medicament(id, quantity, medicament_id,purchase_order_id) values
 (1, 100, 1, 1), (2, 100, 2, 1), (3, 100, 3, 1), (4, 100, 4, 1), (5, 100, 5, 1), (6, 100, 6, 1),
 (7, 150, 7, 2), (8, 150, 2, 2), (9, 150, 8, 2), (10, 150, 4, 2), (11, 150, 9, 2), (12, 150, 1, 2),
 (13, 100, 6, 3), (14, 100, 3, 3), (15, 100, 7, 3), (16, 100, 11, 3), (17, 100, 12, 3), (18, 100, 14, 3),
 (19, 150, 5, 4), (20, 150, 4, 4), (21, 150, 8, 4), (22, 150, 12, 4), (23, 150, 11, 4), (24, 150, 15, 4);
+
+insert into supplier_medicament(id, quantity, supplier_id, medicament_id) values
+(1, 1000, 1, 1), (2, 2000, 1, 2), (3, 1000, 1, 3), (4, 2000, 1, 4), (5, 1000, 1, 5),(6,2500,1,6),
+(7, 1000, 1, 7), (8, 938, 1, 8), (9, 3821, 1, 9), (10, 782, 1, 10), (11, 1378, 1, 11),(12,1000,1,12);

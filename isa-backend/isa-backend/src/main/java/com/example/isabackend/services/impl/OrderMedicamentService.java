@@ -2,12 +2,17 @@ package com.example.isabackend.services.impl;
 
 import com.example.isabackend.dto.request.CreateOrderMedicamentRequest;
 import com.example.isabackend.dto.response.OrderMedicamentResponse;
+import com.example.isabackend.dto.response.PurchaseOrderResponse;
 import com.example.isabackend.entity.OrderMedicament;
+import com.example.isabackend.entity.PurchaseOrder;
 import com.example.isabackend.repository.IMedicamentRepository;
 import com.example.isabackend.repository.IOrderMedicamentRepository;
 import com.example.isabackend.repository.IPurchaseOrderRepository;
 import com.example.isabackend.services.IOrderMedicamentService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderMedicamentService implements IOrderMedicamentService {
@@ -34,6 +39,17 @@ public class OrderMedicamentService implements IOrderMedicamentService {
         _omRepository.save(orderMedicament);
         return mapOrderMedicamentToOrderMedicamentResponse(orderMedicament);
     }
+
+    @Override
+    public List<OrderMedicamentResponse> getAllByOrderId(Long id) {
+        List<OrderMedicament> orderMedicaments = _omRepository.findAll();
+        List<OrderMedicamentResponse> orderMedicamentResponses = new ArrayList<>();
+        for (OrderMedicament orderMedicament: orderMedicaments) {
+            if(orderMedicament.getPurchaseOrder().getId().equals(id)){
+                orderMedicamentResponses.add(mapOrderMedicamentToOrderMedicamentResponse(orderMedicament));
+            }
+        }
+        return orderMedicamentResponses;    }
 
     private OrderMedicamentResponse mapOrderMedicamentToOrderMedicamentResponse(OrderMedicament orderMedicament) {
         OrderMedicamentResponse orderMedicamentResponse = new OrderMedicamentResponse();

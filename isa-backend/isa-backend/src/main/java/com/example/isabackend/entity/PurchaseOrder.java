@@ -1,5 +1,6 @@
 package com.example.isabackend.entity;
 
+import com.example.isabackend.util.enums.PurchaseOrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,5 +33,7 @@ public class PurchaseOrder {
     private LocalDate limitDate;
 
     private boolean active;
+
+    private PurchaseOrderStatus purchaseOrderStatus;
 
 }

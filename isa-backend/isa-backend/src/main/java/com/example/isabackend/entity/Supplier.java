@@ -3,6 +3,7 @@ package com.example.isabackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,4 +28,7 @@ public class Supplier {
     private String number;
 
     private String address;
+
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SupplierMedicament> supplierMedicaments;
 }

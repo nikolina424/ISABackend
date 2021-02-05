@@ -1,5 +1,6 @@
 package com.example.isabackend.dto.response;
 import com.example.isabackend.entity.Pharmacy;
+import com.example.isabackend.util.enums.PurchaseOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class PurchaseOrderResponse {
     private LocalDate limitDate;
     private PharmacistResponse pharmacist;
     private boolean active;
+    private PurchaseOrderStatus purchaseOrderStatus;
 }
