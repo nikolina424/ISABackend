@@ -76,4 +76,16 @@ public class PurchaseOrderService implements IPurchaseOrderService {
         }
         return purchaseOrderResponses;
     }
+
+    @Override
+    public List<PurchaseOrderResponse> getAllByActiveStatus() {
+        List<PurchaseOrder> purchaseOrders = _poRepository.findAll();
+        List<PurchaseOrderResponse> purchaseOrderResponses = new ArrayList<>();
+        for (PurchaseOrder purchaseOrder: purchaseOrders) {
+            if(purchaseOrder.getPurchaseOrderStatus().equals(PurchaseOrderStatus.ACTIVE)){
+                purchaseOrderResponses.add(mapPurchaseOrderToPurchaseOrderResponse(purchaseOrder));
+            }
+        }
+        return purchaseOrderResponses;
+    }
 }

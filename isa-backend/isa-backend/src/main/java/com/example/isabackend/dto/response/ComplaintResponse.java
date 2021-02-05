@@ -1,6 +1,5 @@
 package com.example.isabackend.dto.response;
 
-import com.example.isabackend.entity.Dermatologist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

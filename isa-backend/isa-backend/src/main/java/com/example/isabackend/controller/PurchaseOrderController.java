@@ -43,4 +43,15 @@ public class PurchaseOrderController {
             return new ResponseEntity<>("Purchase order in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<?> getAllByActiveStatus(){
+        List<PurchaseOrderResponse> responses = _poService.getAllByActiveStatus();
+        if(responses != null) {
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Purchase order in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+    }
 }

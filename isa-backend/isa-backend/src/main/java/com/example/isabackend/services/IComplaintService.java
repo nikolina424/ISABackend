@@ -7,11 +7,6 @@ import com.example.isabackend.dto.response.ComplaintResponse;
 import java.util.List;
 
 public interface IComplaintService {
-    List<ComplaintResponse> getAllComplaintsByPharmacyId(Long id);
-
-    List<ComplaintResponse> getAllComplaintsOnDermatologistsByPharmacyId(Long id);
-
-    List<ComplaintResponse> getAllComplaintsOnPharmacistsByPharmacyId(Long id);
 
     ComplaintResponse createPharmacyComplaint(CreateComplaintRequest request);
 
@@ -20,4 +15,10 @@ public interface IComplaintService {
     ComplaintResponse createDermatologistComplaint(CreateComplaintRequest request);
 
     boolean answer(AnswerComplaintRequest request);
+
+    List<ComplaintResponse> getAllDermatologistComplaints();
+
+    List<ComplaintResponse> getAllPharmacistsComplaints();
+
+    List<ComplaintResponse> getAllPharmacyComplaints();
 }

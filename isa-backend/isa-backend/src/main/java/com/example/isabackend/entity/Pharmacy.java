@@ -32,6 +32,9 @@ public class Pharmacy {
     private List<PharmacyAdmin> pharmacyAdmins;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Promotion> promotions;
+
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Pharmacist> pharmacists;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)

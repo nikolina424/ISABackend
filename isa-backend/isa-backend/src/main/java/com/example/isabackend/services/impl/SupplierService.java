@@ -44,7 +44,7 @@ public class SupplierService implements ISupplierService {
         }
     }
 
-    private SupplierResponse mapSupplierToSupplierResponse(Supplier supplier) {
+    public SupplierResponse mapSupplierToSupplierResponse(Supplier supplier) {
         SupplierResponse supplierResponse = new SupplierResponse();
         supplierResponse.setId(supplier.getId());
         supplierResponse.setAddress(supplier.getAddress());

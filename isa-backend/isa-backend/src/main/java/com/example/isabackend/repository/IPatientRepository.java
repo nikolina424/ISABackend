@@ -12,8 +12,6 @@ import java.util.List;
 public interface IPatientRepository extends JpaRepository<Patient, Long> {
     Patient findOneById(Long id);
 
-    Patient findOneByUser(User user);
-
     List<Patient> findAllByDeleted(boolean b);
 
     List<Patient> findAllByRequestStatus(RequestStatus pending);

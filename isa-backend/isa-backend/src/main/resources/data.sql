@@ -194,10 +194,10 @@ insert into price_medicament(id, price, pharmacy_medicament_id, pricelist_id) va
 (46, 34, 11, 10),(47, 33, 12, 10),(48, 22, 13, 10),(49, 49, 14, 10),(50, 39, 15, 10);
 
 insert into complaint(id, text, pharmacy_id, dermatologist_id, pharmacist_id, patient_id, answered) values
-(1, 'Complaint on dermatologist', 1, 1, null, 1, false),
-(2, 'Complaint on dermatologist', 1, 1, null, 2, false),
-(3, 'Complaint on pharmacist', 1, null, 1, 1, false),
-(4, 'Complaint on pharmacist', 2, null, 2, 2, false),
+(1, 'Complaint on dermatologist', null, 1, null, 1, false),
+(2, 'Complaint on dermatologist', null, 1, null, 2, false),
+(3, 'Complaint on pharmacist', null, null, 1, 1, false),
+(4, 'Complaint on pharmacist', null, null, 2, 2, false),
 (5, 'Complaint on pharmacy', 1, null, null, 2, false),
 (6, 'Complaint on pharmacy', 2, null, null, 1, false),
 (7, 'Complaint on pharmacy', 1, null, null, 1, false),
@@ -234,3 +234,6 @@ insert into order_medicament(id, quantity, medicament_id,purchase_order_id) valu
 insert into supplier_medicament(id, quantity, supplier_id, medicament_id) values
 (1, 1000, 1, 1), (2, 2000, 1, 2), (3, 1000, 1, 3), (4, 2000, 1, 4), (5, 1000, 1, 5),(6,2500,1,6),
 (7, 1000, 1, 7), (8, 938, 1, 8), (9, 3821, 1, 9), (10, 782, 1, 10), (11, 1378, 1, 11),(12,1000,1,12);
+
+insert into offer(id, price, delivery_date, purchase_order_id, supplier_id, offer_status) values
+(1, 1500, '2021-03-01', 3, 1, 0), (2, 1500, '2021-03-01', 4, 1, 0);

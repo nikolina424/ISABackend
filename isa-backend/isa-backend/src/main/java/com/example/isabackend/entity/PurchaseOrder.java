@@ -19,6 +19,12 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private LocalDate limitDate;
+
+    private boolean active;
+
+    private PurchaseOrderStatus purchaseOrderStatus;
+
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMedicament> orderMedicaments;
 
@@ -30,10 +36,8 @@ public class PurchaseOrder {
     @JoinColumn(name = "pharmacist_id")
     private Pharmacist pharmacist;
 
-    private LocalDate limitDate;
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Offer> offers;
 
-    private boolean active;
-
-    private PurchaseOrderStatus purchaseOrderStatus;
 
 }

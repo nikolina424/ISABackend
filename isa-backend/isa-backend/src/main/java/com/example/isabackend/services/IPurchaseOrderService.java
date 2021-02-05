@@ -9,4 +9,6 @@ public interface IPurchaseOrderService {
     PurchaseOrderResponse createPurchaseOrder(CreatePurchaseOrderRequest request);
 
     List<PurchaseOrderResponse> getAllByPharmacyId(Long id);
+
+    List<PurchaseOrderResponse> getAllByActiveStatus();
 }

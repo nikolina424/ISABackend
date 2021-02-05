@@ -23,36 +23,36 @@ public class ComplaintController {
         _complaintService = complaintService;
     }
 
-    @GetMapping("/{id}/pharmacy")
-    public ResponseEntity<?> getAllComplaintsByPharmacyId(@PathVariable("id") Long id){
-        List<ComplaintResponse> responses = _complaintService.getAllComplaintsByPharmacyId(id);
+    @GetMapping("/pharmacies")
+    public ResponseEntity<?> getAllPharmacyComplaints(){
+        List<ComplaintResponse> responses = _complaintService.getAllPharmacyComplaints();
         if(responses != null) {
             return new ResponseEntity<>(responses, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>("Complaint in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Complaint pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/dermatologists/{id}/pharmacy")
-    public ResponseEntity<?> getAllComplaintsOnDermatologistsByPharmacyId(@PathVariable("id") Long id){
-        List<ComplaintResponse> responses = _complaintService.getAllComplaintsOnDermatologistsByPharmacyId(id);
+    @GetMapping("/dermatologists")
+    public ResponseEntity<?> getAllDermatologistComplaints(){
+        List<ComplaintResponse> responses = _complaintService.getAllDermatologistComplaints();
         if(responses != null) {
             return new ResponseEntity<>(responses, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>("Complaint in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Complaint for dermatologist doesn't exist.", HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/pharmacists/{id}/pharmacy")
-    public ResponseEntity<?> getAllComplaintsOnPharmacistsByPharmacyId(@PathVariable("id") Long id){
-        List<ComplaintResponse> responses = _complaintService.getAllComplaintsOnPharmacistsByPharmacyId(id);
+    @GetMapping("/pharmacists")
+    public ResponseEntity<?> getAllPharmacistsComplaints(){
+        List<ComplaintResponse> responses = _complaintService.getAllPharmacistsComplaints();
         if(responses != null) {
             return new ResponseEntity<>(responses, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>("Complaint in this pharmacy doesn't exist.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Complaints for pharmacist doesn't exist.", HttpStatus.NOT_FOUND);
         }
     }
 

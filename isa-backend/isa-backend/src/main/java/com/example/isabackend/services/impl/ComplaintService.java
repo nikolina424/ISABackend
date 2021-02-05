@@ -36,63 +36,6 @@ public class ComplaintService implements IComplaintService {
         _emailService = emailService;
     }
 
-    @Override
-    public List<ComplaintResponse> getAllComplaintsByPharmacyId(Long id) {
-        List<Complaint> complaints = _complaintRepository.findAll();
-        List<Complaint> finalComplaints = new ArrayList<>();
-        for(Complaint c: complaints){
-            if (c.getPharmacy() != null) {
-                if(c.getDermatologist() == null && c.getPharmacist() == null){
-                    if(c.getPharmacy().getId() == id){
-                        if(c.isAnswered() == false){
-                            finalComplaints.add(c);
-                        }
-                    }
-                }
-
-            }
-            
-        }
-        return mapComplaintsToComplaintsResponses(finalComplaints);
-    }
-
-    @Override
-    public List<ComplaintResponse> getAllComplaintsOnDermatologistsByPharmacyId(Long id) {
-        List<Complaint> complaints = _complaintRepository.findAll();
-        List<Complaint> finalComplaints = new ArrayList<>();
-        for(Complaint c: complaints){
-            if (c.getPharmacy() != null) {
-                if(c.getPharmacy().getId() == id){
-                    if(c.getDermatologist() != null) {
-                        if(c.isAnswered() == false){
-                            finalComplaints.add(c);
-                        }
-                    }
-                }
-            }
-
-        }
-        return mapComplaintsToComplaintsResponses(finalComplaints);
-    }
-
-    @Override
-    public List<ComplaintResponse> getAllComplaintsOnPharmacistsByPharmacyId(Long id) {
-        List<Complaint> complaints = _complaintRepository.findAll();
-        List<Complaint> finalComplaints = new ArrayList<>();
-        for(Complaint c: complaints){
-            if (c.getPharmacy() != null) {
-                if(c.getPharmacy().getId() == id){
-                    if(c.getPharmacist() != null) {
-                        if(c.isAnswered() == false){
-                            finalComplaints.add(c);
-                        }
-                    }
-                }
-            }
-
-        }
-        return mapComplaintsToComplaintsResponses(finalComplaints);
-    }
 
     @Override
     public ComplaintResponse createPharmacyComplaint(CreateComplaintRequest request) {
@@ -146,6 +89,49 @@ public class ComplaintService implements IComplaintService {
 
         _emailService.answerOnComplaint(request);
         return true;
+    }
+
+    @Override
+    public List<ComplaintResponse> getAllDermatologistComplaints() {
+
+        List<Complaint> complaints = _complaintRepository.findAll();
+        List<Complaint> finalComplaints = new ArrayList<>();
+        for(Complaint c: complaints){
+                    if(c.getDermatologist() != null) {
+                        if(c.isAnswered() == false){
+                            finalComplaints.add(c);
+                        }
+                    }
+        }
+        return mapComplaintsToComplaintsResponses(finalComplaints);
+    }
+
+    @Override
+    public List<ComplaintResponse> getAllPharmacistsComplaints() {
+        List<Complaint> complaints = _complaintRepository.findAll();
+        List<Complaint> finalComplaints = new ArrayList<>();
+        for(Complaint c: complaints){
+                    if(c.getPharmacist() != null) {
+                        if(c.isAnswered() == false){
+                            finalComplaints.add(c);
+                        }
+                    }
+        }
+        return mapComplaintsToComplaintsResponses(finalComplaints);
+    }
+
+    @Override
+    public List<ComplaintResponse> getAllPharmacyComplaints() {
+        List<Complaint> complaints = _complaintRepository.findAll();
+        List<Complaint> finalComplaints = new ArrayList<>();
+        for(Complaint c: complaints){
+            if (c.getPharmacy() != null) {
+                        if(c.isAnswered() == false){
+                            finalComplaints.add(c);
+                        }
+                    }
+        }
+        return mapComplaintsToComplaintsResponses(finalComplaints);
     }
 
     private List<ComplaintResponse> mapComplaintsToComplaintsResponses(List<Complaint> finalComplaints) {
